@@ -1,6 +1,6 @@
 import { EntitySchema } from 'typeorm';
 
-interface UserOrmEntity {
+export interface UserOrmEntity {
   id: string;
   email: string;
   password: string;
