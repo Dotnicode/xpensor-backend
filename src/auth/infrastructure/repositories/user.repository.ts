@@ -8,7 +8,19 @@ import { UserOrmEntity } from '../entities/user.orm-schema';
 export class UserRepository implements IUserRepository {
   constructor(private readonly dataSource: DataSource) {}
 
-  async create(user: User): Promise<void> {
+  async findByEmail(email: string): Promise<User | null> {
+    const ormUser = await this.dataSource
+      .getRepository<UserOrmEntity>('user')
+      .createQueryBuilder('user')
+      .where('user.email = :email', { email })
+      .getOne();
+
+    if (!ormUser) return null;
+
+    return new User(ormUser.id, ormUser.email, ormUser.password);
+  }
+
+  async save(user: User): Promise<void> {
     await this.dataSource
       .getRepository<UserOrmEntity>('user')
       .createQueryBuilder()
@@ -16,15 +28,5 @@ export class UserRepository implements IUserRepository {
       .into('users')
       .values({ email: user.email, password: user.password })
       .execute();
-  }
-
-  async findByEmail(email: string): Promise<User | null> {
-    const ormUser = await this.dataSource
-      .getRepository<UserOrmEntity>('user')
-      .createQueryBuilder('user')
-      .where('user.email = :email', { email })
-      .getOneOrFail();
-
-    return new User(ormUser.id, ormUser.email, ormUser.password);
   }
 }

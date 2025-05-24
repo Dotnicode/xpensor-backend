@@ -8,7 +8,15 @@ import { UserRepository } from './infrastructure/repositories/user.repository';
 @Module({
   imports: [AuthJwtModule],
   controllers: [AuthController],
-  providers: [RegisterUserUseCase, LoginUserUseCase, UserRepository],
+  providers: [
+    UserRepository,
+    {
+      provide: RegisterUserUseCase,
+      useFactory: (userRepository: UserRepository) =>
+        new RegisterUserUseCase(userRepository),
+      inject: [UserRepository],
+    },
+  ],
   exports: [UserRepository],
 })
 export class AuthModule {}
