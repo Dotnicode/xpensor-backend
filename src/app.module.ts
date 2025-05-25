@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserOrmSchema } from './auth/infrastructure/entities/user.orm-schema';
-import { ConfigModule } from '@nestjs/config';
 import { ConsortiumModule } from './consortium/consortium.module';
-import { ConsortiumOrmSchema } from './consortium/infrastructure/entities/consortium.schema';
 
 @Module({
   imports: [
@@ -16,8 +15,8 @@ import { ConsortiumOrmSchema } from './consortium/infrastructure/entities/consor
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
+      entities: [__dirname + '/**/infrastructure/entities/*.schema.{ts,js}'],
       synchronize: true,
-      entities: [UserOrmSchema, ConsortiumOrmSchema],
     }),
     AuthModule,
     ConsortiumModule,
