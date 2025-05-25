@@ -1,3 +1,4 @@
+import { InvalidIdException } from './exceptions/invalid-id.excepcion';
 import { InvalidTaxIdException } from './exceptions/invalid-tax-id.exception';
 import { NotOwnerException } from './exceptions/not-owner.exception';
 
@@ -10,6 +11,17 @@ export class Consortium {
     public readonly ownerId: string,
   ) {
     this.isValidTaxId();
+    this.isValidId();
+  }
+
+  isValidId(): void {
+    if (
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(
+        this.id,
+      )
+    ) {
+      throw new InvalidIdException();
+    }
   }
 
   isOwner(ownerId: string): void {
