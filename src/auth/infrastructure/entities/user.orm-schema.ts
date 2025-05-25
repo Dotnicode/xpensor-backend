@@ -7,7 +7,7 @@ export interface UserOrmEntity {
 }
 
 export const UserOrmSchema = new EntitySchema<UserOrmEntity>({
-  name: 'user',
+  name: 'User',
   tableName: 'users',
   columns: {
     id: {

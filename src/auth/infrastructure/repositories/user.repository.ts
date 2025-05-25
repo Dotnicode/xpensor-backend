@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { IUserRepository } from 'src/auth/domain/user-repository.interface';
 import { User } from 'src/auth/domain/user.entity';
 import { DataSource } from 'typeorm';
-import { UserOrmEntity } from '../entities/user.orm-schema';
+import { UserOrmSchema } from '../entities/user.orm-schema';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -10,9 +10,9 @@ export class UserRepository implements IUserRepository {
 
   async findByEmail(email: string): Promise<User | null> {
     const ormUser = await this.dataSource
-      .getRepository<UserOrmEntity>('user')
-      .createQueryBuilder('user')
-      .where('user.email = :email', { email })
+      .getRepository(UserOrmSchema)
+      .createQueryBuilder('u')
+      .where('u.email = :email', { email })
       .getOne();
 
     if (!ormUser) return null;
@@ -22,7 +22,7 @@ export class UserRepository implements IUserRepository {
 
   async save(user: User): Promise<void> {
     await this.dataSource
-      .getRepository<UserOrmEntity>('user')
+      .getRepository(UserOrmSchema)
       .createQueryBuilder()
       .insert()
       .into('users')
