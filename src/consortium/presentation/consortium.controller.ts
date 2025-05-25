@@ -45,10 +45,10 @@ export class ConsortiumController {
     const { sub: userId } = req.user;
 
     await this.createConsortiumUseCase.execute(
-      userId,
       createConsortiumDto.name,
       createConsortiumDto.taxId,
       createConsortiumDto.address,
+      userId,
     );
 
     return { message: 'Consortium created successfully' };
