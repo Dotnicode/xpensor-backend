@@ -5,6 +5,7 @@ import { ConsortiumController } from './presentation/consortium.controller';
 import { FindAllByOwnerConsortiumsUseCase } from './application/use-cases/find-all-consortiums-by-owner.usecase';
 import { FindConsortiumByIdUseCase } from './application/use-cases/find-consortium-by-id.usecase';
 import { FindAllConsortiumsUseCase } from './application/use-cases/find-all-consortiums.usecase';
+import { UpdateConsortiumUseCase } from './application/use-cases/update-consortium.usecase';
 
 @Module({
   controllers: [ConsortiumController],
@@ -35,6 +36,13 @@ import { FindAllConsortiumsUseCase } from './application/use-cases/find-all-cons
       provide: FindAllConsortiumsUseCase,
       useFactory: (repository: ConsortiumRepository) => {
         return new FindAllConsortiumsUseCase(repository);
+      },
+      inject: [ConsortiumRepository],
+    },
+    {
+      provide: UpdateConsortiumUseCase,
+      useFactory: (repository: ConsortiumRepository) => {
+        return new UpdateConsortiumUseCase(repository);
       },
       inject: [ConsortiumRepository],
     },

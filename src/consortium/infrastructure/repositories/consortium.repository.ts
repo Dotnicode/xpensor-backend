@@ -40,7 +40,17 @@ export class ConsortiumRepository implements IConsortiumRepository {
   async findAll(): Promise<Consortium[]> {
     const rows = await this.dataSource
       .getRepository<ConsortiumOrmEntity>('Consortium')
-      .createQueryBuilder()
+      .createQueryBuilder('c')
+      .leftJoinAndSelect('c.ownerId', 'owner')
+      .select([
+        'c.id',
+        'c.name',
+        'c.taxId',
+        'c.address',
+        'c.ownerId',
+        'owner.id',
+        'owner.email',
+      ])
       .getMany();
 
     return rows.map((row) => this.toDomain(row));

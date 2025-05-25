@@ -14,10 +14,6 @@ export class CreateConsortiumUseCase {
   ): Promise<void> {
     const consortium = new Consortium(uuidv4(), name, taxId, address, ownerId);
 
-    if (!consortium.isValidTaxId(taxId)) {
-      throw new BadRequestException('Invalid TaxID/CUIL');
-    }
-
     await this.consortiumRepository.save(consortium);
   }
 }
