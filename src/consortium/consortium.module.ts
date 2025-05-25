@@ -6,6 +6,7 @@ import { FindAllByOwnerConsortiumsUseCase } from './application/use-cases/find-a
 import { FindConsortiumByIdUseCase } from './application/use-cases/find-consortium-by-id.usecase';
 import { FindAllConsortiumsUseCase } from './application/use-cases/find-all-consortiums.usecase';
 import { UpdateConsortiumUseCase } from './application/use-cases/update-consortium.usecase';
+import { DeleteConsortiumUseCase } from './application/use-cases/delete-consortium.usecase';
 
 @Module({
   controllers: [ConsortiumController],
@@ -43,6 +44,13 @@ import { UpdateConsortiumUseCase } from './application/use-cases/update-consorti
       provide: UpdateConsortiumUseCase,
       useFactory: (repository: ConsortiumRepository) => {
         return new UpdateConsortiumUseCase(repository);
+      },
+      inject: [ConsortiumRepository],
+    },
+    {
+      provide: DeleteConsortiumUseCase,
+      useFactory: (repository: ConsortiumRepository) => {
+        return new DeleteConsortiumUseCase(repository);
       },
       inject: [ConsortiumRepository],
     },
