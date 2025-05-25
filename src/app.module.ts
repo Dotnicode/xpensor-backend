@@ -6,6 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ConsortiumModule } from './consortium/consortium.module';
+import { ConsortiumOrmSchema } from './consortium/infrastructure/entities/consortium.schema';
+import { UserOrmSchema } from './auth/infrastructure/entities/user.orm-schema';
 
 @Module({
   imports: [
@@ -15,7 +17,7 @@ import { ConsortiumModule } from './consortium/consortium.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [__dirname + '/**/infrastructure/entities/*.schema.{ts,js}'],
+      entities: [UserOrmSchema, ConsortiumOrmSchema],
       synchronize: true,
     }),
     AuthModule,

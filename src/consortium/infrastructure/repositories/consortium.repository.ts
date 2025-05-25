@@ -50,6 +50,16 @@ export class ConsortiumRepository implements IConsortiumRepository {
     const rows = await this.dataSource
       .getRepository<ConsortiumOrmEntity>('Consortium')
       .createQueryBuilder('c')
+      .leftJoinAndSelect('c.ownerId', 'owner')
+      .select([
+        'c.id',
+        'c.name',
+        'c.taxId',
+        'c.address',
+        'c.ownerId',
+        'owner.id',
+        'owner.email',
+      ])
       .where('c.ownerId = :ownerId', { ownerId })
       .getMany();
 

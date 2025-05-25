@@ -30,4 +30,15 @@ export const ConsortiumOrmSchema = new EntitySchema<ConsortiumOrmEntity>({
       type: 'uuid',
     },
   },
+  relations: {
+    ownerId: {
+      type: 'many-to-one',
+      target: 'User',
+      joinColumn: {
+        name: 'ownerId',
+        referencedColumnName: 'id',
+      },
+      eager: false,
+    },
+  },
 });
