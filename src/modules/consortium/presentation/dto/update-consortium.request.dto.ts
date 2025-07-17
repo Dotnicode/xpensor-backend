@@ -2,7 +2,7 @@ import {
     IsNotEmpty, IsNumberString, IsOptional, IsString, Length, MinLength
 } from 'class-validator';
 
-export class UpdateConsortiumDto {
+export class UpdateConsortiumRequestDto {
   @IsString()
   @MinLength(3)
   @IsOptional()

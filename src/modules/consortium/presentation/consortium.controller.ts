@@ -1,36 +1,32 @@
+import { AuthRequest } from 'src/common/interfaces/auth-request.interface';
+
 import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  ForbiddenException,
-  Get,
-  Param,
-  ParseUUIDPipe,
-  Post,
-  Put,
-  Request,
-  UseGuards,
+    BadRequestException, Body, Controller, Delete, ForbiddenException, Get, Param, ParseUUIDPipe,
+    Post, Put, Request, UseGuards
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthRequest } from 'src/common/interfaces/auth-request.interface';
-import { CreateConsortiumDto } from '../application/dto/create-consortium.dto';
-import { UpdateConsortiumDto } from '../application/dto/update-consortium.dto';
+
+import { CreateConsortiumInput } from '../application/dto/create-consortium.input';
+import { UpdateConsortiumInput } from '../application/dto/update-consortium.input';
 import { CreateConsortiumUseCase } from '../application/use-cases/create-consortium.usecase';
 import { DeleteConsortiumUseCase } from '../application/use-cases/delete-consortium.usecase';
-import { FindAllByOwnerConsortiumsUseCase } from '../application/use-cases/find-all-consortiums-by-owner.usecase';
+import {
+    FindAllByAdministratorConsortiumsUseCase
+} from '../application/use-cases/find-all-consortiums-by-administrator.usecase';
 import { FindAllConsortiumsUseCase } from '../application/use-cases/find-all-consortiums.usecase';
 import { FindConsortiumByIdUseCase } from '../application/use-cases/find-consortium-by-id.usecase';
 import { UpdateConsortiumUseCase } from '../application/use-cases/update-consortium.usecase';
-import { InvalidTaxIdException } from '../domain/exceptions/invalid-tax-id.exception';
-import { NotOwnerException } from '../domain/exceptions/not-owner.exception';
+import { InvalidTaxIdException } from '../domain/errors/invalid-tax-id.error';
+import { NotOwnerException } from '../domain/errors/not-owner.error';
+import { CreateConsortiumRequestDto } from './dto/create-consortium.request.dto';
+import { UpdateConsortiumRequestDto } from './dto/update-consortium.request.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('consortiums')
 export class ConsortiumController {
   constructor(
     private readonly createConsortiumUseCase: CreateConsortiumUseCase,
-    private readonly findAllByOwnerConsortiumsUseCase: FindAllByOwnerConsortiumsUseCase,
+    private readonly findAllByAdministratorConsortiumsUseCase: FindAllByAdministratorConsortiumsUseCase,
     private readonly findConsortiumByIdUseCase: FindConsortiumByIdUseCase,
     private readonly findAllConsortiumsUseCase: FindAllConsortiumsUseCase,
     private readonly updateConsortiumUseCase: UpdateConsortiumUseCase,
@@ -39,17 +35,17 @@ export class ConsortiumController {
 
   @Post()
   async create(
-    @Body() createConsortiumDto: CreateConsortiumDto,
+    @Body() createConsortiumDto: CreateConsortiumRequestDto,
     @Request() req: AuthRequest,
   ) {
-    const { sub: userId } = req.user;
+    const { sub: administradorId } = req.user;
+    const input: CreateConsortiumInput = {
+      name: createConsortiumDto.name,
+      taxId: createConsortiumDto.taxId,
+      address: createConsortiumDto.address,
+    };  
 
-    await this.createConsortiumUseCase.execute(
-      createConsortiumDto.name,
-      createConsortiumDto.taxId,
-      createConsortiumDto.address,
-      userId,
-    );
+    await this.createConsortiumUseCase.execute(input, administradorId);
 
     return { message: 'Consortium created successfully' };
   }
@@ -62,11 +58,12 @@ export class ConsortiumController {
   }
 
   @Get()
-  async findAllByOwnerId(@Request() req: AuthRequest) {
-    const { sub: userId } = req.user;
+  async findAllByAdministratorId(@Request() req: AuthRequest) {
+    console.log(req.user)
+    const { sub: administratorId } = req.user;
 
     const consortiums =
-      await this.findAllByOwnerConsortiumsUseCase.execute(userId);
+      await this.findAllByAdministratorConsortiumsUseCase.execute(administratorId);
 
     return { consortiums };
   }
@@ -95,16 +92,22 @@ export class ConsortiumController {
   @Put(':id')
   async update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateConsortiumDto: UpdateConsortiumDto,
+    @Body() updateConsortiumRequestDto: UpdateConsortiumRequestDto,
     @Request() req: AuthRequest,
   ) {
-    const { sub: userId } = req.user;
+    const { sub: administratorId } = req.user;
+
+    const input: UpdateConsortiumInput = {
+      name: updateConsortiumRequestDto.name,
+      taxId: updateConsortiumRequestDto.taxId,
+      address: updateConsortiumRequestDto.address,
+    };
 
     try {
       await this.updateConsortiumUseCase.execute(
         id,
-        updateConsortiumDto,
-        userId,
+        input,
+        administratorId,
       );
 
       return { message: 'Consortium updated successfully' };

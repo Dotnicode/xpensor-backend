@@ -1,31 +1,30 @@
-import { NotFoundException } from '@nestjs/common';
-
 import { IConsortiumRepository } from '../../domain/consortium-repository.interface';
 import { Consortium } from '../../domain/consortium.entity';
-import { UpdateConsortiumDto } from '../dto/update-consortium.dto';
+import { UpdateConsortiumInput } from '../dto/update-consortium.input';
+import { ConsortiumNotFoundError } from '../errors/consortium-not-found.error';
 
 export class UpdateConsortiumUseCase {
   constructor(private readonly consortiumRepository: IConsortiumRepository) {}
 
   async execute(
     id: string,
-    updateConsortiumDto: UpdateConsortiumDto,
-    ownerId: string,
+    updateConsortiumInput: UpdateConsortiumInput,
+    administratorId: string,
   ): Promise<void> {
     const existingConsortium = await this.consortiumRepository.findById(id);
 
     if (!existingConsortium) {
-      throw new NotFoundException('Consortium not found');
+      throw new ConsortiumNotFoundError(id);
     }
 
-    existingConsortium.isOwner(ownerId);
+    existingConsortium.isAdministrator(administratorId);
 
     const updatedConsortium = new Consortium(
       id,
-      updateConsortiumDto.name,
-      updateConsortiumDto.taxId,
-      updateConsortiumDto.address,
-      existingConsortium.ownerId,
+      updateConsortiumInput.name ?? existingConsortium.name,
+      updateConsortiumInput.taxId ?? existingConsortium.taxId,
+      updateConsortiumInput.address ?? existingConsortium.address,
+      existingConsortium.administratorId,
     );
 
     await this.consortiumRepository.update(updatedConsortium);

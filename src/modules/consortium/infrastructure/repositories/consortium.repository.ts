@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 import { IConsortiumRepository } from '../../domain/consortium-repository.interface';
 import { Consortium } from '../../domain/consortium.entity';
-import { ConsortiumOrmEntity, ConsortiumOrmSchema } from '../entities/consortium.schema';
+import { ConsortiumOrmEntity, ConsortiumTypeOrmSchema } from '../entities/consortium.schema';
 
 @Injectable()
 export class ConsortiumRepository implements IConsortiumRepository {
@@ -16,13 +16,13 @@ export class ConsortiumRepository implements IConsortiumRepository {
       raw.name,
       raw.taxId,
       raw.address,
-      raw.ownerId,
+      raw.administratorId,
     );
   }
 
   async save(consortium: Consortium): Promise<void> {
     await this.dataSource
-      .getRepository(ConsortiumOrmSchema)
+      .getRepository(ConsortiumTypeOrmSchema)
       .createQueryBuilder()
       .insert()
       .into('consortiums')
@@ -31,7 +31,7 @@ export class ConsortiumRepository implements IConsortiumRepository {
         name: consortium.name,
         taxId: consortium.taxId,
         address: consortium.address,
-        ownerId: consortium.ownerId,
+        administratorId: consortium.administratorId,
       })
       .execute();
   }
@@ -40,13 +40,13 @@ export class ConsortiumRepository implements IConsortiumRepository {
     const rows = await this.dataSource
       .getRepository<ConsortiumOrmEntity>('Consortium')
       .createQueryBuilder('c')
-      .leftJoinAndSelect('c.ownerId', 'owner')
+      .leftJoinAndSelect('c.administratorId', 'owner')
       .select([
         'c.id',
         'c.name',
         'c.taxId',
         'c.address',
-        'c.ownerId',
+        'c.administratorId',
         'owner.id',
         'owner.email',
       ])
@@ -55,21 +55,21 @@ export class ConsortiumRepository implements IConsortiumRepository {
     return rows.map((row) => this.toDomain(row));
   }
 
-  async findAllByOwnerId(ownerId: string): Promise<Consortium[]> {
+  async findAllByAdministratorId(administratorId: string): Promise<Consortium[]> {
     const rows = await this.dataSource
       .getRepository<ConsortiumOrmEntity>('Consortium')
       .createQueryBuilder('c')
-      .leftJoinAndSelect('c.ownerId', 'owner')
+      .leftJoinAndSelect('c.administratorId', 'owner')
       .select([
         'c.id',
         'c.name',
         'c.taxId',
         'c.address',
-        'c.ownerId',
+        'c.administratorId',
         'owner.id',
         'owner.email',
       ])
-      .where('c.ownerId = :ownerId', { ownerId })
+      .where('c.administratorId = :administratorId', { administratorId })
       .getMany();
 
     return rows.map((row) => this.toDomain(row));

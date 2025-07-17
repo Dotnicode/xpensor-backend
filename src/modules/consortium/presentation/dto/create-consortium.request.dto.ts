@@ -1,6 +1,6 @@
 import { IsString, Length, MinLength } from 'class-validator';
 
-export class CreateConsortiumDto {
+export class CreateConsortiumRequestDto {
   @IsString()
   @MinLength(3)
   name: string;

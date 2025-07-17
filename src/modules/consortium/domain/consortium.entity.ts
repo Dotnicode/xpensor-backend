@@ -1,6 +1,6 @@
-import { InvalidIdException } from './exceptions/invalid-id.excepcion';
-import { InvalidTaxIdException } from './exceptions/invalid-tax-id.exception';
-import { NotOwnerException } from './exceptions/not-owner.exception';
+import { InvalidIdError } from './errors/invalid-id.error';
+import { InvalidTaxIdException } from './errors/invalid-tax-id.error';
+import { NotOwnerException } from './errors/not-owner.error';
 
 export class Consortium {
   constructor(
@@ -8,7 +8,7 @@ export class Consortium {
     public readonly name: string,
     public readonly taxId: string,
     public readonly address: string,
-    public readonly ownerId: string,
+    public readonly administratorId: string,
   ) {
     this.isValidTaxId();
     this.isValidId();
@@ -20,12 +20,12 @@ export class Consortium {
         this.id,
       )
     ) {
-      throw new InvalidIdException();
+      throw new InvalidIdError();
     }
   }
 
-  isOwner(ownerId: string): void {
-    if (this.ownerId !== ownerId) {
+  isAdministrator(administratorId: string): void {
+    if (this.administratorId !== administratorId) {
       throw new NotOwnerException();
     }
   }

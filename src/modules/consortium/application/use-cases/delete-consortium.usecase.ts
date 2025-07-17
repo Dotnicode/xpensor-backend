@@ -12,7 +12,7 @@ export class DeleteConsortiumUseCase {
       throw new NotFoundException('Consortium not found');
     }
 
-    consortium.isOwner(userId);
+    consortium.isAdministrator(userId);
 
     await this.consortiumRepository.delete(id);
   }

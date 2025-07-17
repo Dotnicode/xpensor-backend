@@ -7,7 +7,9 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserOrmSchema } from './modules/auth/infrastructure/entities/user.orm-schema';
 import { ConsortiumModule } from './modules/consortium/consortium.module';
-import { ConsortiumOrmSchema } from './modules/consortium/infrastructure/entities/consortium.schema';
+import {
+    ConsortiumTypeOrmSchema
+} from './modules/consortium/infrastructure/entities/consortium.schema';
 import { UnitOrmSchema } from './modules/unit/infrastructure/entities/unit.schema';
 import { UnitModule } from './modules/unit/unit.module';
 
@@ -19,7 +21,7 @@ import { UnitModule } from './modules/unit/unit.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [UserOrmSchema, ConsortiumOrmSchema, UnitOrmSchema],
+      entities: [UserOrmSchema, ConsortiumTypeOrmSchema, UnitOrmSchema],
       synchronize: true,
     }),
     AuthModule,

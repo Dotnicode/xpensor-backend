@@ -3,8 +3,8 @@ import { Module } from '@nestjs/common';
 import { CreateConsortiumUseCase } from './application/use-cases/create-consortium.usecase';
 import { DeleteConsortiumUseCase } from './application/use-cases/delete-consortium.usecase';
 import {
-    FindAllByOwnerConsortiumsUseCase
-} from './application/use-cases/find-all-consortiums-by-owner.usecase';
+    FindAllByAdministratorConsortiumsUseCase
+} from './application/use-cases/find-all-consortiums-by-administrator.usecase';
 import { FindAllConsortiumsUseCase } from './application/use-cases/find-all-consortiums.usecase';
 import { FindConsortiumByIdUseCase } from './application/use-cases/find-consortium-by-id.usecase';
 import { UpdateConsortiumUseCase } from './application/use-cases/update-consortium.usecase';
@@ -23,9 +23,9 @@ import { ConsortiumController } from './presentation/consortium.controller';
       inject: [ConsortiumRepository],
     },
     {
-      provide: FindAllByOwnerConsortiumsUseCase,
+      provide: FindAllByAdministratorConsortiumsUseCase,
       useFactory: (repository: ConsortiumRepository) => {
-        return new FindAllByOwnerConsortiumsUseCase(repository);
+        return new FindAllByAdministratorConsortiumsUseCase(repository);
       },
       inject: [ConsortiumRepository],
     },
