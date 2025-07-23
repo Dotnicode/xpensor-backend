@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserOrmSchema } from './modules/auth/infrastructure/entities/user.orm-schema';
 import { ConsortiumModule } from './modules/consortium/consortium.module';
@@ -26,7 +24,7 @@ import { UnitModule } from './modules/unit/unit.module';
     ConsortiumModule,
     UnitModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
