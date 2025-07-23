@@ -1,11 +1,16 @@
 import {
-    BadRequestException, Body, Controller, InternalServerErrorException, Post, UnauthorizedException
+  BadRequestException,
+  Body,
+  Controller,
+  InternalServerErrorException,
+  Post,
+  UnauthorizedException,
 } from '@nestjs/common';
 
-import { LoginUserDto } from '../application/dto/login-user.dto';
-import { RegisterUserDto } from '../application/dto/register-user.dto';
 import { LoginUserUseCase } from '../application/use-cases/login-user.usecase';
 import { RegisterUserUseCase } from '../application/use-cases/register-user.usecase';
+import { RegisterUserRequestDto } from './dto/register-user.request.dto';
+import { LoginUserRequestDto } from './dto/login-user.request.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -15,9 +20,9 @@ export class AuthController {
   ) {}
 
   @Post('register')
-  async register(@Body() body: RegisterUserDto) {
+  async register(@Body() registerUserRequestDto: RegisterUserRequestDto) {
     try {
-      await this.registerUserUseCase.execute(body.email, body.password);
+      await this.registerUserUseCase.execute(registerUserRequestDto);
       return { message: 'User registered successfully' };
     } catch (error) {
       if (error instanceof BadRequestException) {
@@ -28,12 +33,10 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() body: LoginUserDto) {
+  async login(@Body() loginUserRequestDto: LoginUserRequestDto) {
     try {
-      const { token } = await this.loginUserUseCase.execute(
-        body.email,
-        body.password,
-      );
+      const { token } =
+        await this.loginUserUseCase.execute(loginUserRequestDto);
 
       return { token };
     } catch (error: unknown) {

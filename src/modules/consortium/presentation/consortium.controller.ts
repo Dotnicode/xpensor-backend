@@ -1,18 +1,26 @@
 import { AuthRequest } from 'src/common/interfaces/auth-request.interface';
 
 import {
-    BadRequestException, Body, Controller, Delete, ForbiddenException, Get, Param, ParseUUIDPipe,
-    Post, Put, Request, UseGuards
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  ForbiddenException,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-import { CreateConsortiumInput } from '../application/dto/create-consortium.input';
-import { UpdateConsortiumInput } from '../application/dto/update-consortium.input';
+import { CreateConsortiumInputDto } from '../application/dto/create-consortium.input.dto';
+import { UpdateConsortiumInputDto } from '../application/dto/update-consortium.input.dto';
 import { CreateConsortiumUseCase } from '../application/use-cases/create-consortium.usecase';
 import { DeleteConsortiumUseCase } from '../application/use-cases/delete-consortium.usecase';
-import {
-    FindAllByAdministratorConsortiumsUseCase
-} from '../application/use-cases/find-all-consortiums-by-administrator.usecase';
+import { FindAllByAdministratorConsortiumsUseCase } from '../application/use-cases/find-all-consortiums-by-administrator.usecase';
 import { FindAllConsortiumsUseCase } from '../application/use-cases/find-all-consortiums.usecase';
 import { FindConsortiumByIdUseCase } from '../application/use-cases/find-consortium-by-id.usecase';
 import { UpdateConsortiumUseCase } from '../application/use-cases/update-consortium.usecase';
@@ -39,11 +47,11 @@ export class ConsortiumController {
     @Request() req: AuthRequest,
   ) {
     const { sub: administradorId } = req.user;
-    const input: CreateConsortiumInput = {
+    const input: CreateConsortiumInputDto = {
       name: createConsortiumDto.name,
       taxId: createConsortiumDto.taxId,
       address: createConsortiumDto.address,
-    };  
+    };
 
     await this.createConsortiumUseCase.execute(input, administradorId);
 
@@ -59,11 +67,13 @@ export class ConsortiumController {
 
   @Get()
   async findAllByAdministratorId(@Request() req: AuthRequest) {
-    console.log(req.user)
+    console.log(req.user);
     const { sub: administratorId } = req.user;
 
     const consortiums =
-      await this.findAllByAdministratorConsortiumsUseCase.execute(administratorId);
+      await this.findAllByAdministratorConsortiumsUseCase.execute(
+        administratorId,
+      );
 
     return { consortiums };
   }
@@ -97,18 +107,14 @@ export class ConsortiumController {
   ) {
     const { sub: administratorId } = req.user;
 
-    const input: UpdateConsortiumInput = {
+    const input: UpdateConsortiumInputDto = {
       name: updateConsortiumRequestDto.name,
       taxId: updateConsortiumRequestDto.taxId,
       address: updateConsortiumRequestDto.address,
     };
 
     try {
-      await this.updateConsortiumUseCase.execute(
-        id,
-        input,
-        administratorId,
-      );
+      await this.updateConsortiumUseCase.execute(id, input, administratorId);
 
       return { message: 'Consortium updated successfully' };
     } catch (error) {

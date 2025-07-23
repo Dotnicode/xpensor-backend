@@ -1,6 +1,6 @@
 import { IConsortiumRepository } from '../../domain/consortium-repository.interface';
 import { Consortium } from '../../domain/consortium.entity';
-import { UpdateConsortiumInput } from '../dto/update-consortium.input';
+import { UpdateConsortiumInputDto } from '../dto/update-consortium.input.dto';
 import { ConsortiumNotFoundError } from '../errors/consortium-not-found.error';
 
 export class UpdateConsortiumUseCase {
@@ -8,7 +8,7 @@ export class UpdateConsortiumUseCase {
 
   async execute(
     id: string,
-    updateConsortiumInput: UpdateConsortiumInput,
+    updateConsortiumInputDto: UpdateConsortiumInputDto,
     administratorId: string,
   ): Promise<void> {
     const existingConsortium = await this.consortiumRepository.findById(id);
@@ -21,9 +21,9 @@ export class UpdateConsortiumUseCase {
 
     const updatedConsortium = new Consortium(
       id,
-      updateConsortiumInput.name ?? existingConsortium.name,
-      updateConsortiumInput.taxId ?? existingConsortium.taxId,
-      updateConsortiumInput.address ?? existingConsortium.address,
+      updateConsortiumInputDto.name ?? existingConsortium.name,
+      updateConsortiumInputDto.taxId ?? existingConsortium.taxId,
+      updateConsortiumInputDto.address ?? existingConsortium.address,
       existingConsortium.administratorId,
     );
 

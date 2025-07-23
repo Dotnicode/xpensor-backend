@@ -1,5 +1,5 @@
-export type CreateConsortiumInput = {
+export type CreateConsortiumInputDto = {
   name: string;
   taxId: string;
   address: string;
-}
+};

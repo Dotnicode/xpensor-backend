@@ -2,9 +2,12 @@ import * as bcrypt from 'bcrypt';
 import { UserRepository } from 'src/modules/auth/infrastructure/repositories/user.repository';
 
 import {
-    BadRequestException, InternalServerErrorException, UnauthorizedException
+  BadRequestException,
+  InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { LoginUserInputDto } from './dto/login-user.input.dto';
 
 export class LoginUserUseCase {
   constructor(
@@ -12,11 +15,16 @@ export class LoginUserUseCase {
     private readonly jwtService: JwtService,
   ) {}
 
-  async execute(email: string, password: string): Promise<{ token: string }> {
-    const user = await this.userRepository.findByEmail(email);
+  async execute(
+    loginUserInputDto: LoginUserInputDto,
+  ): Promise<{ token: string }> {
+    const user = await this.userRepository.findByEmail(loginUserInputDto.email);
     if (!user) throw new BadRequestException('User not found');
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      loginUserInputDto.password,
+      user.password,
+    );
     if (!isPasswordValid) throw new UnauthorizedException('Invalid password');
 
     try {

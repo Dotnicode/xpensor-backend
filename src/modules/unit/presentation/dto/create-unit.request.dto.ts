@@ -1,8 +1,14 @@
 import {
-    IsAlphanumeric, IsNumber, IsNumberString, IsUUID, Max, Min, MinLength
+  IsAlphanumeric,
+  IsNumber,
+  IsNumberString,
+  IsUUID,
+  Max,
+  Min,
+  MinLength,
 } from 'class-validator';
 
-export class CreateUnitDto {
+export class CreateUnitRequestDto {
   @IsNumberString()
   @MinLength(1)
   floor: string;

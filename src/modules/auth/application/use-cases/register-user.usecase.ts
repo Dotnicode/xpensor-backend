@@ -4,16 +4,19 @@ import { UserRepository } from 'src/modules/auth/infrastructure/repositories/use
 import { v4 as uuidv4 } from 'uuid';
 
 import { BadRequestException } from '@nestjs/common';
+import { RegisterUserInputDTO } from './dto/register-user.input.dto';
 
 export class RegisterUserUseCase {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async execute(email: string, password: string): Promise<void> {
-    const userExists = await this.userRepository.findByEmail(email);
+  async execute(registerUserInputDto: RegisterUserInputDTO): Promise<void> {
+    const userExists = await this.userRepository.findByEmail(
+      registerUserInputDto.email,
+    );
     if (userExists) throw new BadRequestException('User already exists');
 
-    const passwordHash = await bcrypt.hash(password, 10);
-    const user = new User(uuidv4(), email, passwordHash);
+    const passwordHash = await bcrypt.hash(registerUserInputDto.password, 10);
+    const user = new User(uuidv4(), registerUserInputDto.email, passwordHash);
 
     await this.userRepository.save(user);
   }
