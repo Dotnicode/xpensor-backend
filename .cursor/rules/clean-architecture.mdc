@@ -1,0 +1,43 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+---
+description: Aplica los principios de Clean Architecture para mantener una separación clara de responsabilidades y facilitar la escalabilidad y mantenibilidad del código.
+globs: ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"]
+alwaysApply: false
+---
+
+## Principios Generales
+
+- **Separación de capas**: Divide el código en capas bien definidas: `Domain`, `Application`, `Infrastructure` y `Presentation`.
+- **Inversión de dependencias**: Las dependencias deben apuntar hacia el dominio, no al revés.
+- **Independencia de frameworks**: El dominio y la lógica de aplicación no deben depender de frameworks o bibliotecas externas.
+- **Testabilidad**: Cada capa debe ser fácilmente testeable de forma aislada.
+
+## Estructura de Carpetas Sugerida
+
+- `src/`
+  - `domain/`: Entidades, interfaces y lógica de negocio pura.
+  - `application/`: Casos de uso y lógica de aplicación.
+  - `infrastructure/`: Implementaciones concretas, como acceso a bases de datos o servicios externos.
+  - `presentation/`: Interfaces de usuario, controladores y adaptadores de entrada/salida.
+
+## Buenas Prácticas
+
+- **Entidades**: Define entidades como clases o interfaces puras sin dependencias externas.
+- **Casos de uso**: Implementa la lógica de aplicación en servicios o funciones que orquesten las entidades.
+- **Interfaces**: Utiliza interfaces para abstraer las dependencias entre capas.
+- **Inyecciones de dependencias**: Implementa inyecciones de dependencias para desacoplar las implementaciones concretas de las abstracciones.
+
+## Reglas de Generación de Código
+
+- Al generar nuevos módulos o funcionalidades, asegúrate de que cada componente se ubique en la capa correspondiente.
+- Evita que la lógica de negocio resida en la capa de presentación o infraestructura.
+- Asegura que las dependencias entre módulos respeten la dirección de las capas (de afuera hacia adentro).
+
+@file src/domain/
+@file src/application/
+@file src/infrastructure/
+@file src/presentation/
