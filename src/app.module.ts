@@ -7,9 +7,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserOrmSchema } from './modules/auth/infrastructure/entities/user.orm-schema';
 import { ConsortiumModule } from './modules/consortium/consortium.module';
-import {
-    ConsortiumTypeOrmSchema
-} from './modules/consortium/infrastructure/entities/consortium.schema';
+import { ConsortiumTypeOrmSchema } from './modules/consortium/infrastructure/entities/consortium.schema';
 import { UnitOrmSchema } from './modules/unit/infrastructure/entities/unit.schema';
 import { UnitModule } from './modules/unit/unit.module';
 
