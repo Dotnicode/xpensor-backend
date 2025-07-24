@@ -8,6 +8,8 @@ import { ConsortiumModule } from './modules/consortium/consortium.module';
 import { ConsortiumTypeOrmSchema } from './modules/consortium/infrastructure/entities/consortium.schema';
 import { UnitOrmSchema } from './modules/unit/infrastructure/entities/unit.schema';
 import { UnitModule } from './modules/unit/unit.module';
+import { ExpensesModule } from './modules/expenses/expenses.module';
+import { ExpenseOrmSchema } from './modules/expenses/infrastructure/expense.schema';
 
 @Module({
   imports: [
@@ -18,12 +20,18 @@ import { UnitModule } from './modules/unit/unit.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [UserOrmSchema, ConsortiumTypeOrmSchema, UnitOrmSchema],
+      entities: [
+        UserOrmSchema,
+        ConsortiumTypeOrmSchema,
+        UnitOrmSchema,
+        ExpenseOrmSchema,
+      ],
       synchronize: true,
     }),
     AuthModule,
     ConsortiumModule,
     UnitModule,
+    ExpensesModule,
   ],
   controllers: [],
   providers: [],

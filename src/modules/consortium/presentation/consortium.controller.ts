@@ -67,7 +67,6 @@ export class ConsortiumController {
 
   @Get()
   async findAllByAdministratorId(@Request() req: AuthRequest) {
-    console.log(req.user);
     const { sub: administratorId } = req.user;
 
     const consortiums =
