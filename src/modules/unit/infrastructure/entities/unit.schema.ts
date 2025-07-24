@@ -3,7 +3,7 @@ import { EntitySchema } from 'typeorm';
 export interface UnitOrmEntity {
   id: string;
   floor: string;
-  label: string;
+  apartment: string;
   percentage: number;
   consortiumId: string;
 }
@@ -20,7 +20,7 @@ export const UnitOrmSchema = new EntitySchema<UnitOrmEntity>({
     floor: {
       type: 'int',
     },
-    label: {
+    apartment: {
       type: 'varchar',
     },
     percentage: {
@@ -30,6 +30,13 @@ export const UnitOrmSchema = new EntitySchema<UnitOrmEntity>({
       type: 'uuid',
     },
   },
+  indices: [
+    {
+      name: 'unique_unit_per_consortium',
+      unique: true,
+      columns: ['consortiumId', 'floor', 'apartment']
+    }
+  ],
   relations: {
     consortiumId: {
       type: 'many-to-one',

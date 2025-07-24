@@ -1,6 +1,6 @@
 export type CreateUnitInputDto = {
   floor: string;
-  label: string;
+  apartment: string;
   percentage: number;
   consortiumId: string;
 };

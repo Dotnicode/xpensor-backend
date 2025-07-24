@@ -15,7 +15,7 @@ export class CreateUnitRequestDto {
 
   @IsAlphanumeric()
   @MinLength(1)
-  label: string;
+  apartment: string;
 
   @IsNumber()
   @Min(0)

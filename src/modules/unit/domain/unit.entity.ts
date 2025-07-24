@@ -1,4 +1,4 @@
-import { UnitLabelInvalidError } from './exceptions/unit-label.exception';
+import { UnitApartmentInvalidError } from './exceptions/unit-apartment.exception';
 import { UnitPercentageInvalidError } from './exceptions/unit-percentage.exception';
 
 export class UnitEntity {
@@ -23,8 +23,8 @@ export class UnitEntity {
 
   validateApartment(): void {
     if (!/^[a-zA-Z0-9\- ]+$/.test(this.apartment)) {
-      throw new UnitLabelInvalidError(
-        'The label must be a valid alphanumeric string, dash or space',
+      throw new UnitApartmentInvalidError(
+        'The apartment must be a valid alphanumeric string, dash or space',
       );
     }
   }

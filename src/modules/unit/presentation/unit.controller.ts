@@ -6,21 +6,22 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { CreateUnitUseCase } from '../application/use-cases/create-unit.usecase';
-import { UnitLabelInvalidError } from '../domain/exceptions/unit-label.exception';
+import { UnitApartmentInvalidError } from '../domain/exceptions/unit-apartment.exception';
 import { CreateUnitRequestDto } from './dto/create-unit.request.dto';
 import { FindAllUnitsByConsortiumIdUseCase } from '../application/use-cases/find-all-units-by-consortium-id.usecase';
+import { UnitExistsException } from '../domain/exceptions/unit-exists.exception';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('units')
 export class UnitController {
-  constructor(private readonly createUnitUseCase: CreateUnitUseCase,
-    private readonly findAllUnitsByConsortiumIdUseCase: FindAllUnitsByConsortiumIdUseCase
+  constructor(
+    private readonly createUnitUseCase: CreateUnitUseCase,
+    private readonly findAllUnitsByConsortiumIdUseCase: FindAllUnitsByConsortiumIdUseCase,
   ) {}
 
   @Post()
@@ -28,10 +29,13 @@ export class UnitController {
     try {
       await this.createUnitUseCase.execute(createUnitRequestDto);
       return {
-        message: `Unit ${createUnitRequestDto.label} created succesfully`,
+        message: `Unit ${createUnitRequestDto.floor}${createUnitRequestDto.apartment} created succesfully`,
       };
     } catch (error) {
-      if (error instanceof UnitLabelInvalidError) {
+      if (error instanceof UnitApartmentInvalidError) {
+        throw new BadRequestException(error.message);
+      }
+      if (error instanceof UnitExistsException) {
         throw new BadRequestException(error.message);
       }
       throw error;
