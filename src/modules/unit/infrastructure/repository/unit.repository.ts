@@ -29,7 +29,7 @@ export class UnitRepository implements IUnitRepository {
       .values({
         id: unit.id,
         floor: unit.floor,
-        label: unit.label,
+        label: unit.apartment,
         percentage: unit.percentage,
         consortiumId: unit.consortiumId,
       })
@@ -62,7 +62,7 @@ export class UnitRepository implements IUnitRepository {
       .update()
       .set({
         floor: unit.floor,
-        label: unit.label,
+        label: unit.apartment,
         percentage: unit.percentage,
       })
       .where('id = :id', { id: unit.id })
