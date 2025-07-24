@@ -37,7 +37,6 @@ export class AuthController {
     try {
       const { token } =
         await this.loginUserUseCase.execute(loginUserRequestDto);
-
       return { token };
     } catch (error: unknown) {
       if (

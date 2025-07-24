@@ -13,6 +13,7 @@ import { UnitModule } from './modules/unit/unit.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',

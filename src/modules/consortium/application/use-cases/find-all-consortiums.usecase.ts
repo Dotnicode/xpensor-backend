@@ -1,6 +1,4 @@
-import {
-    IConsortiumRepository
-} from 'src/modules/consortium/domain/consortium-repository.interface';
+import { IConsortiumRepository } from 'src/modules/consortium/domain/consortium-repository.interface';
 
 import { NotFoundException } from '@nestjs/common';
 

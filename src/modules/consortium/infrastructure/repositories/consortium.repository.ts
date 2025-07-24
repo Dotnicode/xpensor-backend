@@ -4,7 +4,10 @@ import { Injectable } from '@nestjs/common';
 
 import { IConsortiumRepository } from '../../domain/consortium-repository.interface';
 import { Consortium } from '../../domain/consortium.entity';
-import { ConsortiumOrmEntity, ConsortiumTypeOrmSchema } from '../entities/consortium.schema';
+import {
+  ConsortiumOrmEntity,
+  ConsortiumTypeOrmSchema,
+} from '../entities/consortium.schema';
 
 @Injectable()
 export class ConsortiumRepository implements IConsortiumRepository {
@@ -55,7 +58,9 @@ export class ConsortiumRepository implements IConsortiumRepository {
     return rows.map((row) => this.toDomain(row));
   }
 
-  async findAllByAdministratorId(administratorId: string): Promise<Consortium[]> {
+  async findAllByAdministratorId(
+    administratorId: string,
+  ): Promise<Consortium[]> {
     const rows = await this.dataSource
       .getRepository<ConsortiumOrmEntity>('Consortium')
       .createQueryBuilder('c')

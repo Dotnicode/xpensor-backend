@@ -1,5 +1,10 @@
 import {
-    IsNotEmpty, IsNumberString, IsOptional, IsString, Length, MinLength
+  IsNotEmpty,
+  IsNumberString,
+  IsOptional,
+  IsString,
+  Length,
+  MinLength,
 } from 'class-validator';
 
 export class UpdateConsortiumRequestDto {
