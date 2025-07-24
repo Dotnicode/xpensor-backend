@@ -6,6 +6,7 @@ import { IUnitRepository } from '../../domain/unit-repository.interface';
 import { UnitEntity } from '../../domain/unit.entity';
 import { UnitOrmEntity, UnitOrmSchema } from '../entities/unit.schema';
 import { UnitExistsException } from '../../domain/exceptions/unit-exists.exception';
+import { ConsortiumTypeOrmSchema } from 'src/modules/consortium/infrastructure/entities/consortium.schema';
 
 @Injectable()
 export class UnitRepository implements IUnitRepository {
@@ -23,7 +24,7 @@ export class UnitRepository implements IUnitRepository {
 
   async create(unit: UnitEntity): Promise<void> {
     await this.dataSource.transaction(async (manager) => {
-      const exists = await manager
+      const isUnitExists = await manager
         .createQueryBuilder(UnitOrmSchema, 'unit')
         .where('unit.consortiumId = :consortiumId', {
           consortiumId: unit.consortiumId,
@@ -33,7 +34,7 @@ export class UnitRepository implements IUnitRepository {
         .setLock('pessimistic_write')
         .getOne();
 
-      if (exists) {
+      if (isUnitExists) {
         throw new UnitExistsException({
           floor: unit.floor,
           apartment: unit.apartment,

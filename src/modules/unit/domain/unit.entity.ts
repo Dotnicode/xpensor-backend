@@ -1,5 +1,5 @@
-import { UnitApartmentInvalidError } from './exceptions/unit-apartment.exception';
-import { UnitPercentageInvalidError } from './exceptions/unit-percentage.exception';
+import { ApartmentInvalidError } from './exceptions/apartment.exception';
+import { PercentageInvalidError } from './exceptions/percentage.exception';
 
 export class UnitEntity {
   constructor(
@@ -15,7 +15,7 @@ export class UnitEntity {
 
   validateUnitPercentage(): void {
     if (this.percentage < 0 || this.percentage >= 100) {
-      throw new UnitPercentageInvalidError(
+      throw new PercentageInvalidError(
         'The percentage must be greater or equal to 0 and less than or equal to 100',
       );
     }
@@ -23,7 +23,7 @@ export class UnitEntity {
 
   validateApartment(): void {
     if (!/^[a-zA-Z0-9\- ]+$/.test(this.apartment)) {
-      throw new UnitApartmentInvalidError(
+      throw new ApartmentInvalidError(
         'The apartment must be a valid alphanumeric string, dash or space',
       );
     }

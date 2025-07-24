@@ -56,5 +56,6 @@ import { ConsortiumController } from './presentation/consortium.controller';
       inject: [ConsortiumRepository],
     },
   ],
+  exports: [ConsortiumRepository],
 })
 export class ConsortiumModule {}
