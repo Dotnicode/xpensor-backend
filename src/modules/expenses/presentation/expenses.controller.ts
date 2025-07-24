@@ -40,8 +40,6 @@ export class ExpensesController {
     @Query('date') date: string,
   ) {
     try {
-      console.log({ consortiumId, date });
-
       return this.findExpensesByMonthUseCase.execute(
         new Date(date),
         consortiumId,

@@ -9,8 +9,6 @@ export class FindExpensesByMonthUseCase {
       throw new Error('Date and consortiumId are required');
     }
 
-    console.log({ consortiumId, date });
-
     return await this.expenseRepository.findByMonth(date, consortiumId);
   }
 }
