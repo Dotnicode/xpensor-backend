@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, ParseDatePipe } from '@nestjs/common';
 import { ConsortiumModule } from '../consortium/consortium.module';
 import { ExpensesController } from './presentation/expenses.controller';
 import { ConsortiumRepository } from '../consortium/infrastructure/repositories/consortium.repository';

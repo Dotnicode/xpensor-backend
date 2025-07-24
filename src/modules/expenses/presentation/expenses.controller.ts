@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseDatePipe,
   ParseUUIDPipe,
   Post,
   Query,
@@ -37,13 +38,10 @@ export class ExpensesController {
   @Get(':consortiumId')
   async findByMonth(
     @Param('consortiumId', ParseUUIDPipe) consortiumId: string,
-    @Query('date') date: string,
+    @Query('date', new ParseDatePipe()) date: Date,
   ) {
     try {
-      return this.findExpensesByMonthUseCase.execute(
-        new Date(date),
-        consortiumId,
-      );
+      return this.findExpensesByMonthUseCase.execute(date, consortiumId);
     } catch (error) {
       if (error instanceof Error) {
         throw new BadRequestException(error.message);
