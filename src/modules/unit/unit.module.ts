@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 
-import { CreateUnitUseCase } from './application/use-cases/create-unit.usecase';
-import { UnitController } from './presentation/unit.controller';
-import { FindAllUnitsByConsortiumIdUseCase } from './application/use-cases/find-all-units-by-consortium-id.usecase';
-import { UnitRepository } from './infrastructure/repository/unit.repository';
-import { ConsortiumRepository } from '../consortium/infrastructure/repositories/consortium.repository';
 import { ConsortiumModule } from '../consortium/consortium.module';
+import { ConsortiumRepository } from '../consortium/infrastructure/consortium.repository';
+import { CreateUnitUseCase } from './application/create.usecase';
+import { ListUnitsByConsortiumIdUseCase } from './application/list-by-consortium-id.usecase';
+import { UnitController } from './presentation/unit.controller';
+import { UnitRepository } from './infrastructure/unit.repository';
 
 @Module({
   imports: [ConsortiumModule],
@@ -23,9 +23,9 @@ import { ConsortiumModule } from '../consortium/consortium.module';
       inject: [UnitRepository, ConsortiumRepository],
     },
     {
-      provide: FindAllUnitsByConsortiumIdUseCase,
+      provide: ListUnitsByConsortiumIdUseCase,
       useFactory: (repository: UnitRepository) => {
-        return new FindAllUnitsByConsortiumIdUseCase(repository);
+        return new ListUnitsByConsortiumIdUseCase(repository);
       },
       inject: [UnitRepository],
     },

@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-import { CreateUnitUseCase } from '../application/use-cases/create-unit.usecase';
+import { CreateUnitUseCase } from '../application/create.usecase';
 import { ApartmentInvalidError } from '../domain/exceptions/apartment.exception';
 import { CreateUnitRequestDto } from './dto/create-unit.request.dto';
-import { FindAllUnitsByConsortiumIdUseCase } from '../application/use-cases/find-all-units-by-consortium-id.usecase';
+import { ListUnitsByConsortiumIdUseCase } from '../application/list-by-consortium-id.usecase';
 import { UnitExistsException } from '../domain/exceptions/unit-exists.exception';
 import { ConsortiumNotExistsException } from '../domain/exceptions/consortium-not-exists.exception';
 
@@ -22,7 +22,7 @@ import { ConsortiumNotExistsException } from '../domain/exceptions/consortium-no
 export class UnitController {
   constructor(
     private readonly createUnitUseCase: CreateUnitUseCase,
-    private readonly findAllUnitsByConsortiumIdUseCase: FindAllUnitsByConsortiumIdUseCase,
+    private readonly findAllUnitsByConsortiumIdUseCase: ListUnitsByConsortiumIdUseCase,
   ) {}
 
   @Post()

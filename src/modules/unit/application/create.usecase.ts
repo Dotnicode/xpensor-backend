@@ -1,12 +1,11 @@
-import { v4 as uuidv4 } from 'uuid';
-
-import { IUnitRepository } from '../../domain/unit-repository.interface';
-import { UnitEntity } from '../../domain/unit.entity';
-import { CreateUnitInputDto } from '../dto/create-unit.input.dto';
-import { UnitExistsException } from '../../domain/exceptions/unit-exists.exception';
 import { IConsortiumRepository } from 'src/modules/consortium/domain/consortium-repository.interface';
-import { ConsortiumNotExistsException } from '../../domain/exceptions/consortium-not-exists.exception';
-import { ApartmentInvalidError } from '../../domain/exceptions/apartment.exception';
+import { v4 as uuidv4 } from 'uuid';
+import { ApartmentInvalidError } from '../domain/exceptions/apartment.exception';
+import { ConsortiumNotExistsException } from '../domain/exceptions/consortium-not-exists.exception';
+import { UnitExistsException } from '../domain/exceptions/unit-exists.exception';
+import { IUnitRepository } from '../domain/unit-repository.interface';
+import { UnitEntity } from '../domain/unit.entity';
+import { CreateUnitInputDto } from './dto/create-unit.input.dto';
 
 export class CreateUnitUseCase {
   constructor(
@@ -25,10 +24,10 @@ export class CreateUnitUseCase {
 
       const newUnit = new UnitEntity(
         uuidv4(),
+        inputDto.consortiumId,
         inputDto.floor,
         inputDto.apartment,
         inputDto.percentage,
-        inputDto.consortiumId,
       );
 
       await this.unitRepository.create(newUnit);
