@@ -1,12 +1,15 @@
 import { EntitySchema } from 'typeorm';
+import { ExpenseType } from '../domain/enums/expense-type.enum';
 
 export interface ExpenseOrmEntity {
   id: string;
+  consortiumId: string;
   description: string;
+  type: ExpenseType;
+  category: string;
   amount: number;
   date: Date;
-  category: string;
-  consortiumId: string;
+  isProrated: boolean;
 }
 
 export const ExpenseOrmSchema = new EntitySchema<ExpenseOrmEntity>({
@@ -18,22 +21,27 @@ export const ExpenseOrmSchema = new EntitySchema<ExpenseOrmEntity>({
       primary: true,
       generated: 'uuid',
     },
-    amount: {
-      type: 'float',
+    consortiumId: {
+      type: 'uuid',
     },
     description: {
       type: 'varchar',
-      nullable: true,
+    },
+    type: {
+      type: 'enum',
+      enum: ExpenseType,
+    },
+    category: {
+      type: 'varchar',
+    },
+    amount: {
+      type: 'float',
     },
     date: {
       type: 'date',
     },
-    category: {
-      type: 'varchar',
-      nullable: true,
-    },
-    consortiumId: {
-      type: 'uuid',
+    isProrated: {
+      type: 'boolean',
     },
   },
   relations: {

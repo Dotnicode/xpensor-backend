@@ -1,7 +1,11 @@
+import { ExpenseType } from '../../domain/enums/expense-type.enum';
+
 export class CreateExpenseInputDto {
-  description?: string;
+  consortiumId: string;
+  description: string;
+  type: ExpenseType;
+  category: string;
   amount: number;
   date: Date;
-  category?: string;
-  consortiumId: string;
+  isProrated: boolean;
 }

@@ -8,7 +8,7 @@ export class Consortium {
     public readonly name: string,
     public readonly taxId: string,
     public readonly address: string,
-    public readonly administratorId: string,
+    public readonly userId: string,
   ) {
     this.isValidTaxId();
     this.isValidId();
@@ -24,8 +24,8 @@ export class Consortium {
     }
   }
 
-  isAdministrator(administratorId: string): void {
-    if (this.administratorId !== administratorId) {
+  isAdministrator(userId: string): void {
+    if (this.userId !== userId) {
       throw new NotOwnerException();
     }
   }

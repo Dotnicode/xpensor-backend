@@ -5,11 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserOrmSchema } from './modules/auth/infrastructure/entities/user.orm-schema';
 import { ConsortiumModule } from './modules/consortium/consortium.module';
-import { ConsortiumTypeOrmSchema } from './modules/consortium/infrastructure/entities/consortium.schema';
-import { UnitOrmSchema } from './modules/unit/infrastructure/entities/unit.schema';
-import { UnitModule } from './modules/unit/unit.module';
+import { ConsortiumOrmSchema } from './modules/consortium/infrastructure/consortium.schema';
 import { ExpensesModule } from './modules/expenses/expenses.module';
 import { ExpenseOrmSchema } from './modules/expenses/infrastructure/expense.schema';
+import { UnitOrmSchema } from './modules/unit/infrastructure/unit.schema';
+import { UnitModule } from './modules/unit/unit.module';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { ExpenseOrmSchema } from './modules/expenses/infrastructure/expense.sche
       url: process.env.DATABASE_URL,
       entities: [
         UserOrmSchema,
-        ConsortiumTypeOrmSchema,
+        ConsortiumOrmSchema,
         UnitOrmSchema,
         ExpenseOrmSchema,
       ],

@@ -4,10 +4,10 @@ import { PercentageInvalidError } from './exceptions/percentage.exception';
 export class UnitEntity {
   constructor(
     public readonly id: string,
+    public readonly consortiumId: string,
     public readonly floor: string,
     public readonly apartment: string,
     public readonly percentage: number,
-    public readonly consortiumId: string,
   ) {
     this.validateUnitPercentage();
     this.validateApartment();

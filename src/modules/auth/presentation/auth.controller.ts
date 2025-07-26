@@ -9,8 +9,8 @@ import {
 
 import { LoginUserUseCase } from '../application/use-cases/login-user.usecase';
 import { RegisterUserUseCase } from '../application/use-cases/register-user.usecase';
-import { RegisterUserRequestDto } from './dto/register-user.request.dto';
 import { LoginUserRequestDto } from './dto/login-user.request.dto';
+import { RegisterUserRequestDto } from './dto/register-user.request.dto';
 
 @Controller('auth')
 export class AuthController {

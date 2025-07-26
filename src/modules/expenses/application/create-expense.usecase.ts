@@ -21,11 +21,13 @@ export class CreateExpenseUseCase {
 
     const newExpense = new ExpenseEntity(
       randomUUID(),
-      expense?.description,
+      expense.consortiumId,
+      expense.description,
+      expense.type,
+      expense.category,
       expense.amount,
       expense.date,
-      expense.category,
-      consortium.id,
+      expense.isProrated,
     );
 
     await this.expenseRepository.create(newExpense);

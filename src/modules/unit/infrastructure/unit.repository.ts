@@ -1,12 +1,10 @@
 import { DataSource } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
-
-import { IUnitRepository } from '../../domain/unit-repository.interface';
-import { UnitEntity } from '../../domain/unit.entity';
-import { UnitOrmEntity, UnitOrmSchema } from '../entities/unit.schema';
-import { UnitExistsException } from '../../domain/exceptions/unit-exists.exception';
-import { ConsortiumTypeOrmSchema } from 'src/modules/consortium/infrastructure/entities/consortium.schema';
+import { UnitExistsException } from '../domain/exceptions/unit-exists.exception';
+import { IUnitRepository } from '../domain/unit-repository.interface';
+import { UnitEntity } from '../domain/unit.entity';
+import { UnitOrmEntity, UnitOrmSchema } from './unit.schema';
 
 @Injectable()
 export class UnitRepository implements IUnitRepository {
@@ -15,10 +13,10 @@ export class UnitRepository implements IUnitRepository {
   private toDomain(raw: UnitOrmEntity): UnitEntity {
     return new UnitEntity(
       raw.id,
+      raw.consortiumId,
       raw.floor,
       raw.apartment,
       raw.percentage,
-      raw.consortiumId,
     );
   }
 
@@ -50,6 +48,8 @@ export class UnitRepository implements IUnitRepository {
       .getRepository(UnitOrmSchema)
       .createQueryBuilder('u')
       .where('u.consortiumId = :consortiumId', { consortiumId })
+      .orderBy('u.floor', 'ASC')
+      .addOrderBy('u.apartment', 'ASC')
       .getMany();
 
     return rows.map((row) => this.toDomain(row));

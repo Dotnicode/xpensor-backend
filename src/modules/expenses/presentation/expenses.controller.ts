@@ -3,14 +3,14 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   ParseDatePipe,
   ParseUUIDPipe,
   Post,
   Query,
 } from '@nestjs/common';
-import { FindExpensesByMonthUseCase } from '../application/find-by-month.usecase';
 import { CreateExpenseUseCase } from '../application/create-expense.usecase';
+import { FindExpensesByMonthUseCase } from '../application/find-by-month.usecase';
+import { ConsortiumNotExistsException } from '../domain/exceptions/consortium-not-exists.exception';
 import { CreateExpenseRequestDto } from './dto/create-expense-request.dto';
 
 @Controller('expenses')
@@ -20,25 +20,25 @@ export class ExpensesController {
     private readonly findExpensesByMonthUseCase: FindExpensesByMonthUseCase,
   ) {}
 
-  @Post(':consortiumId')
-  async create(
-    @Param('consortiumId', ParseUUIDPipe) consortiumId: string,
-    @Body() createExpenseDto: CreateExpenseRequestDto,
-  ) {
-    await this.createExpense.execute({
-      ...createExpenseDto,
-      consortiumId,
-    });
+  @Post()
+  async create(@Body() createExpenseDto: CreateExpenseRequestDto) {
+    try {
+      await this.createExpense.execute(createExpenseDto);
 
-    return {
-      message: 'Expense created successfully',
-    };
+      return {
+        message: 'Expense created successfully',
+      };
+    } catch (error) {
+      if (error instanceof ConsortiumNotExistsException) {
+        throw new BadRequestException(error.message);
+      }
+    }
   }
 
-  @Get(':consortiumId')
+  @Get()
   async findByMonth(
-    @Param('consortiumId', ParseUUIDPipe) consortiumId: string,
     @Query('date', new ParseDatePipe()) date: Date,
+    @Query('consortiumId', ParseUUIDPipe) consortiumId: string,
   ) {
     try {
       return this.findExpensesByMonthUseCase.execute(date, consortiumId);
