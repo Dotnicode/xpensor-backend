@@ -1,21 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { ExpenseEntity } from '../domain/expense.entity';
+import { Between, DataSource } from 'typeorm';
 import { IExpenseRepository } from '../domain/expense-repository.interface';
-import { DataSource } from 'typeorm';
-import { ExpenseOrmSchema } from './expense.schema';
+import { ExpenseEntity } from '../domain/expense.entity';
+import { ExpenseOrmEntity, ExpenseOrmSchema } from './expense.schema';
 
 @Injectable()
 export class ExpenseRepository implements IExpenseRepository {
   constructor(private readonly dataSource: DataSource) {}
 
-  private toDomain(raw: ExpenseEntity) {
+  private toDomain(orm: ExpenseOrmEntity): ExpenseEntity {
     return new ExpenseEntity(
-      raw.id,
-      raw.description,
-      raw.amount,
-      raw.date,
-      raw.category,
-      raw.consortiumId,
+      orm.id,
+      orm.consortiumId,
+      orm.description,
+      orm.type,
+      orm.category,
+      orm.amount,
+      new Date(orm.date),
+      orm.isProrated,
     );
   }
 
@@ -29,20 +31,28 @@ export class ExpenseRepository implements IExpenseRepository {
     date: Date,
     consortiumId: string,
   ): Promise<ExpenseEntity[]> {
-    const rows = await this.dataSource
-      .getRepository(ExpenseOrmSchema)
-      .createQueryBuilder('expense')
-      .where('expense.date >= :startDate', {
-        startDate: new Date(date.getFullYear(), date.getMonth(), 1),
-      })
-      .andWhere('expense.date < :endDate', {
-        endDate: new Date(date.getFullYear(), date.getMonth() + 1, 1),
-      })
-      .andWhere('expense.consortiumId = :consortiumId', {
-        consortiumId,
-      })
-      .getMany();
+    const targetDate = date instanceof Date ? date : new Date(date);
 
-    return rows.map((row) => this.toDomain(row));
+    const startOfMonth = new Date(
+      targetDate.getFullYear(),
+      targetDate.getMonth(),
+      1,
+    );
+    const startOfNextMonth = new Date(
+      targetDate.getFullYear(),
+      targetDate.getMonth() + 1,
+      1,
+    );
+
+    const expenses = await this.dataSource
+      .getRepository(ExpenseOrmSchema)
+      .find({
+        where: {
+          date: Between(startOfMonth, startOfNextMonth),
+          consortiumId,
+        },
+      });
+
+    return expenses.map((row) => this.toDomain(row));
   }
 }

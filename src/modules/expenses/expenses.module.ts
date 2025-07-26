@@ -1,10 +1,10 @@
-import { Module, ParseDatePipe } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConsortiumModule } from '../consortium/consortium.module';
-import { ExpensesController } from './presentation/expenses.controller';
-import { ConsortiumRepository } from '../consortium/infrastructure/repositories/consortium.repository';
+import { ConsortiumRepository } from '../consortium/infrastructure/consortium.repository';
 import { CreateExpenseUseCase } from './application/create-expense.usecase';
-import { ExpenseRepository } from './infrastructure/expense.repository';
 import { FindExpensesByMonthUseCase } from './application/find-by-month.usecase';
+import { ExpenseRepository } from './infrastructure/expense.repository';
+import { ExpensesController } from './presentation/expenses.controller';
 
 @Module({
   imports: [ConsortiumModule],
