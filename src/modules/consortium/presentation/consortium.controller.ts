@@ -7,6 +7,7 @@ import {
   Delete,
   ForbiddenException,
   Get,
+  NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
@@ -17,26 +18,25 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 
 import { CreateConsortiumInputDto } from '../application/dto/create-consortium.input.dto';
-import { UpdateConsortiumInputDto } from '../application/dto/update-consortium.input.dto';
-import { CreateConsortiumUseCase } from '../application/use-cases/create-consortium.usecase';
-import { DeleteConsortiumUseCase } from '../application/use-cases/delete-consortium.usecase';
-import { FindAllByAdministratorConsortiumsUseCase } from '../application/use-cases/find-all-consortiums-by-administrator.usecase';
-import { FindAllConsortiumsUseCase } from '../application/use-cases/find-all-consortiums.usecase';
-import { FindConsortiumByIdUseCase } from '../application/use-cases/find-consortium-by-id.usecase';
-import { UpdateConsortiumUseCase } from '../application/use-cases/update-consortium.usecase';
+import { CreateConsortiumUseCase } from '../application/use-cases/create.usecase';
+import { DeleteConsortiumUseCase } from '../application/use-cases/delete.usecase';
+import { ListConsortiumsByUserIdUseCase } from '../application/use-cases/list-by-user-id.usecase';
+import { FindConsortiumByIdUseCase } from '../application/use-cases/find-by-id';
+import { UpdateConsortiumUseCase } from '../application/use-cases/update.usecase';
 import { InvalidTaxIdException } from '../domain/errors/invalid-tax-id.error';
 import { NotOwnerException } from '../domain/errors/not-owner.error';
 import { CreateConsortiumRequestDto } from './dto/create-consortium.request.dto';
 import { UpdateConsortiumRequestDto } from './dto/update-consortium.request.dto';
+import { Consortium } from '../domain/consortium.entity';
+import { ConsortiumNotExistsException } from '../application/exceptions/consortium-not-exists.exception';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('consortiums')
 export class ConsortiumController {
   constructor(
     private readonly createConsortiumUseCase: CreateConsortiumUseCase,
-    private readonly findAllByAdministratorConsortiumsUseCase: FindAllByAdministratorConsortiumsUseCase,
+    private readonly listConsortiumsByUserIdUseCase: ListConsortiumsByUserIdUseCase,
     private readonly findConsortiumByIdUseCase: FindConsortiumByIdUseCase,
-    private readonly findAllConsortiumsUseCase: FindAllConsortiumsUseCase,
     private readonly updateConsortiumUseCase: UpdateConsortiumUseCase,
     private readonly deleteConsortiumUseCase: DeleteConsortiumUseCase,
   ) {}
@@ -45,43 +45,30 @@ export class ConsortiumController {
   async create(
     @Body() createConsortiumDto: CreateConsortiumRequestDto,
     @Request() req: AuthRequest,
-  ) {
-    const { sub: administradorId } = req.user;
-    const input: CreateConsortiumInputDto = {
-      name: createConsortiumDto.name,
-      taxId: createConsortiumDto.taxId,
-      address: createConsortiumDto.address,
-    };
+  ): Promise<string | undefined> {
+    try {
+      const { sub: administradorId } = req.user;
+      const input: CreateConsortiumInputDto = {
+        name: createConsortiumDto.name,
+        taxId: createConsortiumDto.taxId,
+        address: createConsortiumDto.address,
+      };
 
-    await this.createConsortiumUseCase.execute(input, administradorId);
+      await this.createConsortiumUseCase.execute(input, administradorId);
 
-    return { message: 'Consortium created successfully' };
-  }
-
-  @Get('all')
-  async findAll() {
-    const consortiums = await this.findAllConsortiumsUseCase.execute();
-
-    return { consortiums };
-  }
-
-  @Get()
-  async findAllByAdministratorId(@Request() req: AuthRequest) {
-    const { sub: administratorId } = req.user;
-
-    const consortiums =
-      await this.findAllByAdministratorConsortiumsUseCase.execute(
-        administratorId,
-      );
-
-    return { consortiums };
+      return 'Consortium created successfully';
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new BadRequestException(error.message);
+      }
+    }
   }
 
   @Get(':id')
   async findById(
     @Param('id', ParseUUIDPipe) id: string,
     @Request() req: AuthRequest,
-  ) {
+  ): Promise<Consortium | undefined> {
     const { sub: userId } = req.user;
 
     try {
@@ -90,42 +77,52 @@ export class ConsortiumController {
         userId,
       );
 
-      return { consortium };
+      return consortium;
     } catch (error) {
-      if (error instanceof NotOwnerException) {
-        throw new ForbiddenException(error.message);
+      if (error instanceof ConsortiumNotExistsException) {
+        throw new NotFoundException(error.message);
       }
     }
   }
 
-  @Put(':id')
+  @Get()
+  async listByUserId(@Request() req: AuthRequest): Promise<Consortium[]> {
+    const { sub: userId } = req.user;
+
+    const consortiums =
+      await this.listConsortiumsByUserIdUseCase.execute(userId);
+
+    return consortiums;
+  }
+
+  @Put(':consortiumId')
   async update(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('consortiumId', ParseUUIDPipe) consortiumId: string,
     @Body() updateConsortiumRequestDto: UpdateConsortiumRequestDto,
     @Request() req: AuthRequest,
-  ) {
-    const { sub: administratorId } = req.user;
-
-    const input: UpdateConsortiumInputDto = {
-      name: updateConsortiumRequestDto.name,
-      taxId: updateConsortiumRequestDto.taxId,
-      address: updateConsortiumRequestDto.address,
-    };
+  ): Promise<string> {
+    const { sub: userId } = req.user;
 
     try {
-      await this.updateConsortiumUseCase.execute(id, input, administratorId);
+      await this.updateConsortiumUseCase.execute(
+        consortiumId,
+        updateConsortiumRequestDto,
+        userId,
+      );
 
-      return { message: 'Consortium updated successfully' };
+      return 'Consortium updated successfully';
     } catch (error) {
       if (error instanceof NotOwnerException) {
         throw new ForbiddenException(error.message);
       }
-
       if (error instanceof InvalidTaxIdException) {
         throw new BadRequestException({
           message: error.message,
           invalidValue: error.invalidValue,
         });
+      }
+      if (error instanceof ConsortiumNotExistsException) {
+        throw new NotFoundException(error.message);
       }
 
       throw error;
@@ -136,16 +133,18 @@ export class ConsortiumController {
   async delete(
     @Param('id', ParseUUIDPipe) id: string,
     @Request() req: AuthRequest,
-  ) {
+  ): Promise<string> {
     const { sub: userId } = req.user;
 
     try {
       await this.deleteConsortiumUseCase.execute(id, userId);
-
-      return { message: 'Consortium deleted successfully' };
+      return 'Consortium deleted successfully';
     } catch (error) {
       if (error instanceof NotOwnerException) {
         throw new ForbiddenException(error.message);
+      }
+      if (error instanceof ConsortiumNotExistsException) {
+        throw new NotFoundException(error.message);
       }
 
       throw error;

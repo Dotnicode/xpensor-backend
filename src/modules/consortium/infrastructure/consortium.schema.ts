@@ -5,37 +5,37 @@ export interface ConsortiumOrmEntity {
   name: string;
   taxId: string;
   address: string;
-  administratorId: string;
+  userId: string;
 }
 
-export const ConsortiumTypeOrmSchema = new EntitySchema<ConsortiumOrmEntity>({
+export const ConsortiumOrmSchema = new EntitySchema<ConsortiumOrmEntity>({
   name: 'Consortium',
   tableName: 'consortiums',
   columns: {
     id: {
       type: 'uuid',
       primary: true,
-      generated: 'uuid',
+    },
+    userId: {
+      type: 'uuid',
     },
     name: {
+      type: 'varchar',
+      unique: true,
+    },
+    address: {
       type: 'varchar',
     },
     taxId: {
       type: 'varchar',
     },
-    address: {
-      type: 'varchar',
-    },
-    administratorId: {
-      type: 'uuid',
-    },
   },
   relations: {
-    administratorId: {
+    userId: {
       type: 'many-to-one',
       target: 'User',
       joinColumn: {
-        name: 'administratorId',
+        name: 'userId',
         referencedColumnName: 'id',
       },
       eager: false,

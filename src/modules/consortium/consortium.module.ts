@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 
-import { CreateConsortiumUseCase } from './application/use-cases/create-consortium.usecase';
-import { DeleteConsortiumUseCase } from './application/use-cases/delete-consortium.usecase';
-import { FindAllByAdministratorConsortiumsUseCase } from './application/use-cases/find-all-consortiums-by-administrator.usecase';
-import { FindAllConsortiumsUseCase } from './application/use-cases/find-all-consortiums.usecase';
-import { FindConsortiumByIdUseCase } from './application/use-cases/find-consortium-by-id.usecase';
-import { UpdateConsortiumUseCase } from './application/use-cases/update-consortium.usecase';
-import { ConsortiumRepository } from './infrastructure/repositories/consortium.repository';
+import { CreateConsortiumUseCase } from './application/use-cases/create.usecase';
+import { DeleteConsortiumUseCase } from './application/use-cases/delete.usecase';
+import { ListConsortiumsByUserIdUseCase } from './application/use-cases/list-by-user-id.usecase';
+import { FindConsortiumByIdUseCase } from './application/use-cases/find-by-id';
+import { UpdateConsortiumUseCase } from './application/use-cases/update.usecase';
+import { ConsortiumRepository } from './infrastructure/consortium.repository';
 import { ConsortiumController } from './presentation/consortium.controller';
 
 @Module({
@@ -21,9 +20,9 @@ import { ConsortiumController } from './presentation/consortium.controller';
       inject: [ConsortiumRepository],
     },
     {
-      provide: FindAllByAdministratorConsortiumsUseCase,
+      provide: ListConsortiumsByUserIdUseCase,
       useFactory: (repository: ConsortiumRepository) => {
-        return new FindAllByAdministratorConsortiumsUseCase(repository);
+        return new ListConsortiumsByUserIdUseCase(repository);
       },
       inject: [ConsortiumRepository],
     },
@@ -31,13 +30,6 @@ import { ConsortiumController } from './presentation/consortium.controller';
       provide: FindConsortiumByIdUseCase,
       useFactory: (repository: ConsortiumRepository) => {
         return new FindConsortiumByIdUseCase(repository);
-      },
-      inject: [ConsortiumRepository],
-    },
-    {
-      provide: FindAllConsortiumsUseCase,
-      useFactory: (repository: ConsortiumRepository) => {
-        return new FindAllConsortiumsUseCase(repository);
       },
       inject: [ConsortiumRepository],
     },

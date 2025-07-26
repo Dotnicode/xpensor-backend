@@ -19,6 +19,6 @@ export class CreateConsortiumUseCase {
       administratorId,
     );
 
-    await this.consortiumRepository.save(consortium);
+    await this.consortiumRepository.create(consortium);
   }
 }
