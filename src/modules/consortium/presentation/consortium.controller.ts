@@ -18,17 +18,17 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 
 import { CreateConsortiumInputDto } from '../application/dto/create-consortium.input.dto';
+import { ConsortiumNotExistsException } from '../application/exceptions/consortium-not-exists.exception';
 import { CreateConsortiumUseCase } from '../application/use-cases/create.usecase';
 import { DeleteConsortiumUseCase } from '../application/use-cases/delete.usecase';
-import { ListConsortiumsByUserIdUseCase } from '../application/use-cases/list-by-user-id.usecase';
 import { FindConsortiumByIdUseCase } from '../application/use-cases/find-by-id';
+import { ListConsortiumsByUserIdUseCase } from '../application/use-cases/list-by-user-id.usecase';
 import { UpdateConsortiumUseCase } from '../application/use-cases/update.usecase';
+import { Consortium } from '../domain/consortium.entity';
 import { InvalidTaxIdException } from '../domain/errors/invalid-tax-id.error';
 import { NotOwnerException } from '../domain/errors/not-owner.error';
 import { CreateConsortiumRequestDto } from './dto/create-consortium.request.dto';
 import { UpdateConsortiumRequestDto } from './dto/update-consortium.request.dto';
-import { Consortium } from '../domain/consortium.entity';
-import { ConsortiumNotExistsException } from '../application/exceptions/consortium-not-exists.exception';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('consortiums')
@@ -64,16 +64,26 @@ export class ConsortiumController {
     }
   }
 
-  @Get(':id')
+  @Get()
+  async listByUserId(@Request() req: AuthRequest): Promise<Consortium[]> {
+    const { sub: userId } = req.user;
+
+    const consortiums =
+      await this.listConsortiumsByUserIdUseCase.execute(userId);
+
+    return consortiums;
+  }
+
+  @Get(':consortiumId')
   async findById(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('consortiumId', ParseUUIDPipe) consortiumId: string,
     @Request() req: AuthRequest,
   ): Promise<Consortium | undefined> {
     const { sub: userId } = req.user;
 
     try {
       const consortium = await this.findConsortiumByIdUseCase.execute(
-        id,
+        consortiumId,
         userId,
       );
 
@@ -83,16 +93,6 @@ export class ConsortiumController {
         throw new NotFoundException(error.message);
       }
     }
-  }
-
-  @Get()
-  async listByUserId(@Request() req: AuthRequest): Promise<Consortium[]> {
-    const { sub: userId } = req.user;
-
-    const consortiums =
-      await this.listConsortiumsByUserIdUseCase.execute(userId);
-
-    return consortiums;
   }
 
   @Put(':consortiumId')
@@ -129,15 +129,15 @@ export class ConsortiumController {
     }
   }
 
-  @Delete(':id')
+  @Delete(':consortiumId')
   async delete(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('consortiumId', ParseUUIDPipe) consortiumId: string,
     @Request() req: AuthRequest,
   ): Promise<string> {
     const { sub: userId } = req.user;
 
     try {
-      await this.deleteConsortiumUseCase.execute(id, userId);
+      await this.deleteConsortiumUseCase.execute(consortiumId, userId);
       return 'Consortium deleted successfully';
     } catch (error) {
       if (error instanceof NotOwnerException) {

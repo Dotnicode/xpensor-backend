@@ -6,10 +6,14 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  IsUUID,
 } from 'class-validator';
 import { ExpenseType } from '../../domain/enums/expense-type.enum';
 
 export class CreateExpenseRequestDto {
+  @IsUUID()
+  consortiumId: string;
+
   @IsString()
   @IsNotEmpty()
   description: string;

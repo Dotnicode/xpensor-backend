@@ -3,19 +3,19 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   ParseUUIDPipe,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import { CreateUnitUseCase } from '../application/create.usecase';
-import { ApartmentInvalidError } from '../domain/exceptions/apartment.exception';
-import { CreateUnitRequestDto } from './dto/create-unit.request.dto';
 import { ListUnitsByConsortiumIdUseCase } from '../application/list-by-consortium-id.usecase';
-import { UnitExistsException } from '../domain/exceptions/unit-exists.exception';
+import { ApartmentInvalidError } from '../domain/exceptions/apartment.exception';
 import { ConsortiumNotExistsException } from '../domain/exceptions/consortium-not-exists.exception';
+import { UnitExistsException } from '../domain/exceptions/unit-exists.exception';
+import { CreateUnitRequestDto } from './dto/create-unit.request.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('units')
@@ -46,8 +46,8 @@ export class UnitController {
     }
   }
 
-  @Get(':consortiumId')
-  async getUnits(@Param('consortiumId', ParseUUIDPipe) consortiumId: string) {
+  @Get()
+  async getUnits(@Query('consortiumId', ParseUUIDPipe) consortiumId: string) {
     return await this.findAllUnitsByConsortiumIdUseCase.execute(consortiumId);
   }
 }
