@@ -15,41 +15,34 @@ export class SettlementRepository implements ISettlementRepository {
     amount: number,
     period: YearMonth,
   ): Promise<SettlementEntity> {
-    const savedSettlement = await this.dataSource.transaction(
-      async (manager) => {
-        const existingSettlement = await manager.findOne(SettlementOrmSchema, {
-          where: {
-            consortiumId,
-            period,
-          },
+    const settlement = await this.dataSource.transaction(async (manager) => {
+      const existingSettlement = await manager.findOne(SettlementOrmSchema, {
+        where: {
+          consortiumId,
+          period,
+        },
+      });
+
+      let settlement: SettlementOrmEntity;
+
+      if (existingSettlement) {
+        existingSettlement.amount = amount;
+        settlement = await manager.save(existingSettlement);
+      } else {
+        settlement = await manager.save(SettlementOrmSchema, {
+          consortiumId,
+          amount,
+          period,
         });
-
-        let settlementToSave: SettlementOrmEntity;
-
-        if (existingSettlement) {
-          existingSettlement.amount = amount;
-          settlementToSave = await manager.save(
-            SettlementOrmSchema,
-            existingSettlement,
-          );
-        } else {
-          settlementToSave = await manager.save(SettlementOrmSchema, {
-            consortiumId,
-            amount,
-            period,
-          });
-        }
-
-        return settlementToSave;
-      },
-    );
+      }
+    });
 
     return new SettlementEntity(
-      savedSettlement.id,
-      savedSettlement.consortiumId,
-      savedSettlement.amount,
-      savedSettlement.period as YearMonth,
-      savedSettlement.createdAt,
+      settlement.id,
+      settlement.consortiumId,
+      settlement.amount,
+      settlement.period.substring(0, 7) as YearMonth,
+      settlement.createdAt,
     );
   }
 

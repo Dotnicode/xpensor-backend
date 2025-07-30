@@ -7,9 +7,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { YearMonth } from 'src/shared/types/year-month.type';
 import { CalculateSettlementUseCase } from '../application/calculate.usecase';
 import { ConsortiumNotExistsException } from '../application/exceptions/consortium-not-exists.exception';
+import { CalculateSettlementRequestDto } from './dto/calculate.request.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('settlements')
@@ -19,20 +19,16 @@ export class SettlementController {
   ) {}
 
   @Get()
-  async calculate(
-    @Query('consortiumId') consortiumId: string,
-    @Query('period') period: YearMonth,
-  ) {
+  async calculate(@Query() query: CalculateSettlementRequestDto) {
     try {
       return await this.calculateSettlementUseCase.execute({
-        consortiumId,
-        period,
+        consortiumId: query.consortiumId,
+        period: query.period,
       });
     } catch (error) {
       if (error instanceof ConsortiumNotExistsException) {
         throw new BadRequestException(error.message);
       }
-
       throw new InternalServerErrorException(error);
     }
   }
