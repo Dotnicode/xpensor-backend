@@ -1,0 +1,1 @@
+export { ExpenseType } from '../../modules/expenses/domain/enums/expense-type.enum';
