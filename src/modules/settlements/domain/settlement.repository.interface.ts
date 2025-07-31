@@ -9,18 +9,12 @@ export interface ISettlementRepository {
     expenses: string[],
     summary: UnitProration[],
     total: number,
-  ): Promise<SettlementEntity | undefined>;
+  ): Promise<SettlementEntity>;
 
   find(
     consortiumId: string,
     period: YearMonth,
   ): Promise<SettlementEntity | null>;
 
-  update(
-    consortiumId: string,
-    period: YearMonth,
-    expenses: string[],
-    summary: UnitProration[],
-    total: number,
-  ): Promise<SettlementEntity>;
+  list(consortiumId: string): Promise<SettlementEntity[]>;
 }

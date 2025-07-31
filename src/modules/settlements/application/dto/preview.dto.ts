@@ -9,7 +9,7 @@ export class PreviewSettlementInputDto {
 export class PreviewSettlementOutputDto {
   consortiumId: string;
   period: YearMonth;
-  expenses: string[];
+  expenseIds: string[];
   summary: UnitProration[];
   total: number;
 }

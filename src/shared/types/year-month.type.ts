@@ -1,4 +1,4 @@
-type Year = `19${Digit}${Digit}` | `20${Digit}${Digit}`;
+type Year = `20${Digit}${Digit}`;
 
 type Digit = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
 

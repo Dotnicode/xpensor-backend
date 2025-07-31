@@ -5,7 +5,7 @@ export interface SettlementOrmEntity {
   id: string;
   consortiumId: string;
   period: string;
-  expenses: string[];
+  expenseIds: string[];
   summary: UnitProration[];
   total: number;
   createdAt: Date;
@@ -28,7 +28,7 @@ export const SettlementOrmSchema = new EntitySchema<SettlementOrmEntity>({
       type: 'varchar',
       length: '7',
     },
-    expenses: {
+    expenseIds: {
       type: 'text',
       array: true,
     },

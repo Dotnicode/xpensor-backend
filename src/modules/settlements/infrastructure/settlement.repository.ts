@@ -15,7 +15,7 @@ export class SettlementRepository implements ISettlementRepository {
       settlement.id,
       settlement.consortiumId,
       settlement.period.substring(0, 7) as YearMonth,
-      settlement.expenses,
+      settlement.expenseIds,
       settlement.summary,
       settlement.total,
       settlement.createdAt,
@@ -26,33 +26,19 @@ export class SettlementRepository implements ISettlementRepository {
   async create(
     consortiumId: string,
     period: YearMonth,
-    expenses: string[],
+    expenseIds: string[],
     summary: UnitProration[],
     total: number,
-  ): Promise<SettlementEntity | undefined> {
-    try {
-      const settlement = await this.dataSource.transaction(async (manager) => {
-        const existing = await manager.findOne(SettlementOrmSchema, {
-          where: { consortiumId, period },
-        });
+  ): Promise<SettlementEntity> {
+    const result = await this.dataSource.manager.save(SettlementOrmSchema, {
+      consortiumId,
+      period,
+      expenseIds,
+      summary,
+      total,
+    });
 
-        if (existing) {
-          throw new Error('Settlement already exists for this period');
-        }
-
-        return await manager.save(SettlementOrmSchema, {
-          consortiumId,
-          period,
-          expenses,
-          summary,
-          total,
-        });
-      });
-
-      return this.toDomain(settlement);
-    } catch (error) {
-      console.log(error);
-    }
+    return this.toDomain(result);
   }
 
   async find(
@@ -66,49 +52,54 @@ export class SettlementRepository implements ISettlementRepository {
       },
     );
 
-    if (!settlement) {
-      return null;
-    }
-
-    return this.toDomain(settlement);
+    return settlement ? this.toDomain(settlement) : null;
   }
 
-  async update(
-    consortiumId: string,
-    period: YearMonth,
-    expenses: string[],
-    summary: UnitProration[],
-    total: number,
-  ): Promise<SettlementEntity> {
-    const settlement = await this.dataSource.transaction(async (manager) => {
-      const existing = await manager.findOne(SettlementOrmSchema, {
-        where: { consortiumId, period },
-      });
+  async list(consortiumId: string): Promise<SettlementEntity[]> {
+    const settlements = await this.dataSource.manager.findBy(
+      SettlementOrmSchema,
+      { consortiumId },
+    );
 
-      if (!existing) {
-        throw new Error('Settlement not found');
-      }
-
-      const result = await manager.update(
-        SettlementOrmSchema,
-        { id: existing.id },
-        {
-          expenses,
-          summary,
-          total,
-          updatedAt: new Date(),
-        },
-      );
-
-      return {
-        ...existing,
-        expenses,
-        summary,
-        total,
-        updatedAt: new Date(),
-      };
-    });
-
-    return this.toDomain(settlement);
+    return settlements.map((settlement) => this.toDomain(settlement));
   }
+
+  // async update(
+  //   consortiumId: string,
+  //   period: YearMonth,
+  //   expenseIds: string[],
+  //   summary: UnitProration[],
+  //   total: number,
+  // ): Promise<SettlementEntity> {
+  //   const settlement = await this.dataSource.transaction(async (manager) => {
+  //     const existing = await manager.findOne(SettlementOrmSchema, {
+  //       where: { consortiumId, period },
+  //     });
+
+  //     if (!existing) {
+  //       throw new Error('Settlement not found');
+  //     }
+
+  //     const result = await manager.update(
+  //       SettlementOrmSchema,
+  //       { id: existing.id },
+  //       {
+  //         expenseIds,
+  //         summary,
+  //         total,
+  //         updatedAt: new Date(),
+  //       },
+  //     );
+
+  //     return {
+  //       ...existing,
+  //       expenseIds,
+  //       summary,
+  //       total,
+  //       updatedAt: new Date(),
+  //     };
+  //   });
+
+  //   return this.toDomain(settlement);
+  // }
 }

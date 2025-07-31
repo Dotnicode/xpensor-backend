@@ -1,5 +1,5 @@
-export class CloseSettlementException extends Error {
+export class ClosedSettlementException extends Error {
   constructor(period: string) {
-    super(`Settlement has been closed for period ${period}`);
+    super(`Period ${period} is already closed`);
   }
 }
