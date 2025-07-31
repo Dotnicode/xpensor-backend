@@ -1,11 +1,15 @@
+import { UnitProration } from 'src/shared/types/unit-proration.type';
 import { EntitySchema } from 'typeorm';
 
 export interface SettlementOrmEntity {
   id: string;
   consortiumId: string;
-  amount: number;
   period: string;
+  expenses: string[];
+  summary: UnitProration[];
+  total: number;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 export const SettlementOrmSchema = new EntitySchema<SettlementOrmEntity>({
@@ -20,17 +24,30 @@ export const SettlementOrmSchema = new EntitySchema<SettlementOrmEntity>({
     consortiumId: {
       type: 'uuid',
     },
-    amount: {
-      type: 'float',
-    },
     period: {
       type: 'varchar',
       length: '7',
+    },
+    expenses: {
+      type: 'text',
+      array: true,
+    },
+    summary: {
+      type: 'jsonb',
+      nullable: false,
+    },
+    total: {
+      type: 'float',
     },
     createdAt: {
       name: 'created_at',
       type: 'timestamp',
       createDate: true,
+    },
+    updatedAt: {
+      name: 'updated_at',
+      type: 'timestamp',
+      updateDate: true,
     },
   },
 });

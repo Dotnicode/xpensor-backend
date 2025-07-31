@@ -1,7 +1,7 @@
 import { IsString, IsUUID, Matches } from 'class-validator';
 import { YearMonth } from 'src/shared/types/year-month.type';
 
-export class CalculateSettlementRequestDto {
+export class PreviewSettlementRequestDto {
   @IsUUID()
   consortiumId: string;
 

@@ -1,32 +1,40 @@
 import { Module } from '@nestjs/common';
-import { ConsortiumModule } from '../consortium/consortium.module';
 import { ConsortiumRepository } from '../consortium/infrastructure/consortium.repository';
 import { ExpenseRepository } from '../expenses/infrastructure/expense.repository';
-import { CalculateSettlementUseCase } from './application/calculate.usecase';
+import { UnitRepository } from '../unit/infrastructure/unit.repository';
+import { PreviewSettlementUseCase } from './application/use-cases/preview.usecase';
 import { SettlementRepository } from './infrastructure/settlement.repository';
 import { SettlementController } from './presentation/settlement.controller';
 
 @Module({
-  imports: [ConsortiumModule],
+  imports: [],
   controllers: [SettlementController],
   providers: [
     SettlementRepository,
     ConsortiumRepository,
     ExpenseRepository,
+    UnitRepository,
     {
-      provide: CalculateSettlementUseCase,
+      provide: PreviewSettlementUseCase,
       useFactory: (
         settlementRepository: SettlementRepository,
         consortiumRepository: ConsortiumRepository,
         expenseRepository: ExpenseRepository,
+        unitRepository: UnitRepository,
       ) => {
-        return new CalculateSettlementUseCase(
+        return new PreviewSettlementUseCase(
           settlementRepository,
           consortiumRepository,
           expenseRepository,
+          unitRepository,
         );
       },
-      inject: [SettlementRepository, ConsortiumRepository, ExpenseRepository],
+      inject: [
+        SettlementRepository,
+        ConsortiumRepository,
+        ExpenseRepository,
+        UnitRepository,
+      ],
     },
   ],
 })

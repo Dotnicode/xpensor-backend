@@ -7,28 +7,33 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CalculateSettlementUseCase } from '../application/calculate.usecase';
+import { PreviewSettlementUseCase } from '../application/use-cases/preview.usecase';
+import { PreviewSettlementRequestDto } from './dto/preview.request.dto';
+import { CloseSettlementException } from '../application/exceptions/close.exception';
 import { ConsortiumNotExistsException } from '../application/exceptions/consortium-not-exists.exception';
-import { CalculateSettlementRequestDto } from './dto/calculate.request.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('settlements')
 export class SettlementController {
   constructor(
-    private readonly calculateSettlementUseCase: CalculateSettlementUseCase,
+    private readonly previewSettlementUseCase: PreviewSettlementUseCase,
   ) {}
 
-  @Get()
-  async calculate(@Query() query: CalculateSettlementRequestDto) {
+  @Get('preview')
+  async preview(@Query() query: PreviewSettlementRequestDto) {
     try {
-      return await this.calculateSettlementUseCase.execute({
+      return await this.previewSettlementUseCase.execute({
         consortiumId: query.consortiumId,
         period: query.period,
       });
     } catch (error) {
-      if (error instanceof ConsortiumNotExistsException) {
+      if (
+        error instanceof CloseSettlementException ||
+        error instanceof ConsortiumNotExistsException
+      ) {
         throw new BadRequestException(error.message);
       }
+
       throw new InternalServerErrorException(error);
     }
   }

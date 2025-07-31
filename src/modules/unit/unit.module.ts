@@ -30,5 +30,6 @@ import { UnitRepository } from './infrastructure/unit.repository';
       inject: [UnitRepository],
     },
   ],
+  exports: [UnitRepository],
 })
 export class UnitModule {}
