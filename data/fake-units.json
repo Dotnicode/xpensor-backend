@@ -1,0 +1,128 @@
+[
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "1",
+    "apartment": "A",
+    "percentage": 5.9
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "1",
+    "apartment": "B",
+    "percentage": 4.9
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "1",
+    "apartment": "C",
+    "percentage": 3.5
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "2",
+    "apartment": "A",
+    "percentage": 5.9
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "2",
+    "apartment": "B",
+    "percentage": 4.9
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "2",
+    "apartment": "C",
+    "percentage": 3.5
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "3",
+    "apartment": "A",
+    "percentage": 5.9
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "3",
+    "apartment": "B",
+    "percentage": 4.9
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "3",
+    "apartment": "C",
+    "percentage": 3.5
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "4",
+    "apartment": "A",
+    "percentage": 5.9
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "4",
+    "apartment": "B",
+    "percentage": 4.9
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "4",
+    "apartment": "C",
+    "percentage": 3.5
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "5",
+    "apartment": "A",
+    "percentage": 5.9
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "5",
+    "apartment": "B",
+    "percentage": 4.9
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "5",
+    "apartment": "C",
+    "percentage": 3.5
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "6",
+    "apartment": "A",
+    "percentage": 5.9
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "6",
+    "apartment": "B",
+    "percentage": 4.9
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "6",
+    "apartment": "C",
+    "percentage": 3.5
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "7",
+    "apartment": "A",
+    "percentage": 5.9
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "7",
+    "apartment": "B",
+    "percentage": 4.9
+  },
+  {
+    "consortiumId": "4ae4ecf7-b794-40eb-a72e-f7b8e00a903d",
+    "floor": "7",
+    "apartment": "C",
+    "percentage": 3.5
+  }
+]
