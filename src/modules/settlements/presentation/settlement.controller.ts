@@ -2,19 +2,26 @@ import {
   BadRequestException,
   Controller,
   Get,
+  Header,
+  HttpCode,
+  HttpStatus,
   InternalServerErrorException,
   Post,
   Query,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ClosedSettlementException } from '../application/exceptions/close.exception';
 import { ConsortiumNotExistsException } from '../application/exceptions/consortium-not-exists.exception';
 import { CloseSettlementUseCase } from '../application/use-cases/close.usecase';
+import { ListSettlementUseCase } from '../application/use-cases/list.usecase';
 import { PreviewSettlementUseCase } from '../application/use-cases/preview.usecase';
 import { CloseSettlementRequestDto } from './dto/close.request.dto';
 import { PreviewSettlementRequestDto } from './dto/preview.request.dto';
-import { ListSettlementUseCase } from '../application/use-cases/list.usecase';
+import { ReportSettlementRequestDto } from './dto/report.request.dto';
+import { GenerateSettlementReportUseCase } from '../application/use-cases/report.usecase';
+import { Response } from 'express';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('settlements')
@@ -23,6 +30,7 @@ export class SettlementController {
     private readonly previewSettlementUseCase: PreviewSettlementUseCase,
     private readonly closeSettlementUseCase: CloseSettlementUseCase,
     private readonly listSettlementUseCase: ListSettlementUseCase,
+    private readonly generateSettlementReportUseCase: GenerateSettlementReportUseCase,
   ) {}
 
   @Post('close')
@@ -66,5 +74,19 @@ export class SettlementController {
 
       throw new InternalServerErrorException(error);
     }
+  }
+
+  @Get('report')
+  async getSettlementReport(
+    @Query() query: ReportSettlementRequestDto,
+    @Res() response: Response,
+  ) {
+    response.setHeader('Content-Type', 'application/pdf');
+
+    const pdf = await this.generateSettlementReportUseCase.execute(
+      query.settlementId,
+    );
+
+    return response.send(pdf);
   }
 }

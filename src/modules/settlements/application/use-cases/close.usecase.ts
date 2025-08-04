@@ -2,7 +2,7 @@ import { IConsortiumRepository } from 'src/modules/consortium/domain/consortium-
 import { IExpenseRepository } from 'src/modules/expenses/domain/expense-repository.interface';
 import { IUnitRepository } from 'src/modules/unit/domain/unit-repository.interface';
 import { isBeforeCurrentPeriod } from 'src/shared/utils/date-helpers.util';
-import { ISettlementRepository } from '../../domain/settlement.repository.interface';
+import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 import { CloseSettlementInputDto } from '../dto/close.dto';
 import { ClosedSettlementException } from '../exceptions/close.exception';
 import { ConsortiumNotExistsException } from '../exceptions/consortium-not-exists.exception';
@@ -26,7 +26,7 @@ export class CloseSettlementUseCase {
       throw new ConsortiumNotExistsException(request.consortiumId);
     }
 
-    const isSettlementExists = await this.settlementRepository.find(
+    const isSettlementExists = await this.settlementRepository.findByPeriod(
       request.consortiumId,
       request.period,
     );
@@ -47,7 +47,8 @@ export class CloseSettlementUseCase {
 
     const summary: UnitProration[] = units.map((unit) => ({
       unitId: unit.id,
-      unitLabel: `${unit.floor}-${unit.apartment}`,
+      label: `${unit.floor}-${unit.apartment}`,
+      percentage: unit.percentage,
       amount: (unit.percentage / 100) * totalProrated,
     }));
 

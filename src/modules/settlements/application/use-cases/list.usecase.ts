@@ -1,4 +1,4 @@
-import { ISettlementRepository } from '../../domain/settlement.repository.interface';
+import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 
 export class ListSettlementUseCase {
   constructor(private readonly settlementRepository: ISettlementRepository) {}

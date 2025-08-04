@@ -3,7 +3,7 @@ import { UnitProration } from 'src/shared/types/unit-proration.type';
 import { YearMonth } from 'src/shared/types/year-month.type';
 import { DataSource } from 'typeorm';
 import { SettlementEntity } from '../domain/settlement.entity';
-import { ISettlementRepository } from '../domain/settlement.repository.interface';
+import { ISettlementRepository } from '../domain/interfaces/repository.interface';
 import { SettlementOrmEntity, SettlementOrmSchema } from './settlement.schema';
 
 @Injectable()
@@ -41,7 +41,18 @@ export class SettlementRepository implements ISettlementRepository {
     return this.toDomain(result);
   }
 
-  async find(
+  async findById(settlementId: string): Promise<SettlementEntity | null> {
+    const settlement = await this.dataSource.manager.findOne(
+      SettlementOrmSchema,
+      {
+        where: { id: settlementId },
+      },
+    );
+
+    return settlement ? this.toDomain(settlement) : null;
+  }
+
+  async findByPeriod(
     consortiumId: string,
     period: YearMonth,
   ): Promise<SettlementEntity | null> {

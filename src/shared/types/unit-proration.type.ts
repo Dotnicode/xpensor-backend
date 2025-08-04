@@ -1,5 +1,6 @@
 export type UnitProration = {
   unitId: string;
-  unitLabel: string;
+  label: string;
+  percentage: number;
   amount: number;
 };

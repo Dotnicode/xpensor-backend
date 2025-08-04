@@ -1,6 +1,6 @@
 import { UnitProration } from 'src/shared/types/unit-proration.type';
 import { YearMonth } from 'src/shared/types/year-month.type';
-import { SettlementEntity } from './settlement.entity';
+import { SettlementEntity } from '../settlement.entity';
 
 export interface ISettlementRepository {
   create(
@@ -11,10 +11,12 @@ export interface ISettlementRepository {
     total: number,
   ): Promise<SettlementEntity>;
 
-  find(
+  findByPeriod(
     consortiumId: string,
     period: YearMonth,
   ): Promise<SettlementEntity | null>;
+
+  findById(settlementId: string): Promise<SettlementEntity | null>;
 
   list(consortiumId: string): Promise<SettlementEntity[]>;
 }
