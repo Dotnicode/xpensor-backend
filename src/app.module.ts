@@ -11,7 +11,7 @@ import { ExpenseOrmSchema } from './modules/expenses/infrastructure/expense.sche
 import { UnitOrmSchema } from './modules/unit/infrastructure/unit.schema';
 import { UnitModule } from './modules/unit/unit.module';
 import { SettlementModule } from './modules/settlements/settlement.module';
-import { SettlementOrmSchema } from './modules/settlements/infrastructure/settlement.schema';
+import { SettlementOrmSchema } from './modules/settlements/infrastructure/repository/settlement.schema';
 
 @Module({
   imports: [

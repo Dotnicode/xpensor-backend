@@ -8,10 +8,10 @@ import { ListSettlementUseCase } from './application/use-cases/list.usecase';
 import { PreviewSettlementUseCase } from './application/use-cases/preview.usecase';
 import { GenerateSettlementReportUseCase } from './application/use-cases/report.usecase';
 import type { IReportGenerator } from './domain/interfaces/report.interface';
-import { SettlementRepository } from './infrastructure/settlement.repository';
+import { SettlementRepository } from './infrastructure/repository/settlement.repository';
 import { SettlementController } from './presentation/settlement.controller';
 import { REPORT_GENERATOR_TOKEN } from 'src/shared/tokens/printer.token';
-import { PdfSettlementReportService } from './infrastructure/pdf-settlement-report.service';
+import { PdfSettlementReportService } from './infrastructure/printer/pdf-settlement-report.service';
 
 @Module({
   controllers: [SettlementController],
