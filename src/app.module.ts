@@ -10,6 +10,7 @@ import { ExpensesModule } from './modules/expenses/expenses.module';
 import { ExpenseOrmSchema } from './modules/expenses/infrastructure/expense.schema';
 import { SettlementOrmSchema } from './modules/settlements/infrastructure/repository/settlement.schema';
 import { SettlementModule } from './modules/settlements/settlement.module';
+import { TransactionsModule } from './modules/transactions/transactions.module';
 import { UnitOrmSchema } from './modules/units/infrastructure/unit.schema';
 import { UnitModule } from './modules/units/unit.module';
 
@@ -36,6 +37,7 @@ import { UnitModule } from './modules/units/unit.module';
     UnitModule,
     ExpensesModule,
     SettlementModule,
+    TransactionsModule,
   ],
   controllers: [],
   providers: [],
