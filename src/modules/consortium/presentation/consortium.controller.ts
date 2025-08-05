@@ -1,4 +1,4 @@
-import { AuthRequest } from 'src/common/interfaces/auth-request.interface';
+import { AuthRequest } from 'src/shared/interfaces/auth-request.interface';
 
 import {
   BadRequestException,

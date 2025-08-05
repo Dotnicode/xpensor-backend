@@ -32,5 +32,6 @@ import { ExpensesController } from './presentation/expenses.controller';
       inject: [ExpenseRepository],
     },
   ],
+  exports: [ExpenseRepository],
 })
 export class ExpensesModule {}
