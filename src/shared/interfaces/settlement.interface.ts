@@ -4,10 +4,12 @@ import { UnitProration } from '../types/unit-proration.type';
 export interface ISettlement {
   id: string;
   consortiumId: string;
+  transactions: string[]; // TODO => implement Transaction[] type
+  proration: UnitProration[];
+  initialCash: number;
+  incomes: number;
+  expenses: number;
+  finalCash: number;
   period: YearMonth;
-  expenses: string[];
-  summary: UnitProration[];
-  total: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
 }

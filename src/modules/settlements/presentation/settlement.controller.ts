@@ -34,12 +34,13 @@ export class SettlementController {
   ) {}
 
   @Post('close')
-  async closePeriod(@Query() query: CloseSettlementRequestDto) {
+  closeCurrentSettlementPeriod(@Query() query: CloseSettlementRequestDto) {
     try {
-      return await this.closeSettlementUseCase.execute({
-        consortiumId: query.consortiumId,
-        period: query.period,
-      });
+      return 'Pending to implementation';
+      // return await this.closeSettlementUseCase.execute({
+      //   consortiumId: query.consortiumId,
+      //   period: query.period,
+      // });
     } catch (error) {
       if (
         error instanceof ClosedSettlementException ||
@@ -53,7 +54,9 @@ export class SettlementController {
   }
 
   @Get()
-  async listSettlements(@Query('consortiumId') consortiumId: string) {
+  async listSettlementsByConsortiumId(
+    @Query('consortiumId') consortiumId: string,
+  ) {
     return this.listSettlementUseCase.execute(consortiumId);
   }
 
@@ -77,7 +80,7 @@ export class SettlementController {
   }
 
   @Get('report')
-  async getSettlementReport(
+  async generateSettlementReport(
     @Query() query: ReportSettlementRequestDto,
     @Res() response: Response,
   ) {

@@ -4,12 +4,14 @@ import { EntitySchema } from 'typeorm';
 export interface SettlementOrmEntity {
   id: string;
   consortiumId: string;
+  transactions: string[];
+  proration: UnitProration[];
+  initialCash: number;
+  incomes: number;
+  expenses: number;
+  finalCash: number;
   period: string;
-  expenseIds: string[];
-  summary: UnitProration[];
-  total: number;
   createdAt: Date;
-  updatedAt: Date;
 }
 
 export const SettlementOrmSchema = new EntitySchema<SettlementOrmEntity>({
@@ -24,30 +26,34 @@ export const SettlementOrmSchema = new EntitySchema<SettlementOrmEntity>({
     consortiumId: {
       type: 'uuid',
     },
-    period: {
-      type: 'varchar',
-      length: '7',
-    },
-    expenseIds: {
-      type: 'text',
+    transactions: {
+      type: 'jsonb',
       array: true,
     },
-    summary: {
+    proration: {
       type: 'jsonb',
       nullable: false,
     },
-    total: {
+    initialCash: {
       type: 'float',
+    },
+    incomes: {
+      type: 'float',
+    },
+    expenses: {
+      type: 'float',
+    },
+    finalCash: {
+      type: 'float',
+    },
+    period: {
+      type: 'varchar',
+      length: '7',
     },
     createdAt: {
       name: 'created_at',
       type: 'timestamp',
       createDate: true,
-    },
-    updatedAt: {
-      name: 'updated_at',
-      type: 'timestamp',
-      updateDate: true,
     },
   },
 });
