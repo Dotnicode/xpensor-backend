@@ -1,6 +1,6 @@
-import { IConsortiumRepository } from 'src/modules/consortium/domain/consortium-repository.interface';
+import { IConsortiumRepository } from 'src/modules/consortiums/domain/consortium-repository.interface';
 import { IExpenseRepository } from 'src/modules/expenses/domain/expense-repository.interface';
-import { IUnitRepository } from 'src/modules/unit/domain/unit-repository.interface';
+import { IUnitRepository } from 'src/modules/units/domain/unit-repository.interface';
 import { UnitProration } from 'src/shared/types/unit-proration.type';
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 import {

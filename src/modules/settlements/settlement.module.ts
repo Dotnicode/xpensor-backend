@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { PrinterModule } from 'src/shared/printer/printer.module';
-import { ConsortiumRepository } from '../consortium/infrastructure/consortium.repository';
+import { ConsortiumRepository } from '../consortiums/infrastructure/consortium.repository';
 import { ExpenseRepository } from '../expenses/infrastructure/expense.repository';
-import { UnitRepository } from '../unit/infrastructure/unit.repository';
+import { UnitRepository } from '../units/infrastructure/unit.repository';
 import { CloseSettlementUseCase } from './application/use-cases/close.usecase';
 import { ListSettlementUseCase } from './application/use-cases/list.usecase';
 import { PreviewSettlementUseCase } from './application/use-cases/preview.usecase';

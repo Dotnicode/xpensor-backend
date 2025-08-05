@@ -1,4 +1,4 @@
-import { IConsortiumRepository } from 'src/modules/consortium/domain/consortium-repository.interface';
+import { IConsortiumRepository } from 'src/modules/consortiums/domain/consortium-repository.interface';
 
 import { Consortium } from '../../domain/consortium.entity';
 

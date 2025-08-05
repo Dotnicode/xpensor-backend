@@ -1,4 +1,4 @@
-import { IConsortiumRepository } from 'src/modules/consortium/domain/consortium-repository.interface';
+import { IConsortiumRepository } from 'src/modules/consortiums/domain/consortium-repository.interface';
 import { IExpenseRepository } from '../domain/expense-repository.interface';
 import { ExpenseEntity } from '../domain/expense.entity';
 import { CreateExpenseInputDto } from './dto/create-expense-input.dto';

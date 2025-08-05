@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ConsortiumModule } from '../consortium/consortium.module';
-import { ConsortiumRepository } from '../consortium/infrastructure/consortium.repository';
+import { ConsortiumModule } from '../consortiums/consortium.module';
+import { ConsortiumRepository } from '../consortiums/infrastructure/consortium.repository';
 import { CreateExpenseUseCase } from './application/create-expense.usecase';
 import { FindExpensesByMonthUseCase } from './application/find-by-month.usecase';
 import { ExpenseRepository } from './infrastructure/expense.repository';

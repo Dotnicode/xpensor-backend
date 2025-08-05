@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { ConsortiumModule } from '../consortium/consortium.module';
-import { ConsortiumRepository } from '../consortium/infrastructure/consortium.repository';
+import { ConsortiumModule } from '../consortiums/consortium.module';
+import { ConsortiumRepository } from '../consortiums/infrastructure/consortium.repository';
 import { CreateUnitUseCase } from './application/create.usecase';
 import { ListUnitsByConsortiumIdUseCase } from './application/list-by-consortium-id.usecase';
 import { UnitController } from './presentation/unit.controller';

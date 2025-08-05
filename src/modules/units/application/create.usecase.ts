@@ -1,4 +1,4 @@
-import { IConsortiumRepository } from 'src/modules/consortium/domain/consortium-repository.interface';
+import { IConsortiumRepository } from 'src/modules/consortiums/domain/consortium-repository.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { ApartmentInvalidError } from '../domain/exceptions/apartment.exception';
 import { ConsortiumNotExistsException } from '../domain/exceptions/consortium-not-exists.exception';
