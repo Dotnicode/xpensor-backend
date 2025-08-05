@@ -14,12 +14,14 @@ export class SettlementRepository implements ISettlementRepository {
     return new SettlementEntity(
       settlement.id,
       settlement.consortiumId,
+      settlement.transactions,
+      settlement.proration,
+      settlement.initialCash,
+      settlement.incomes,
+      settlement.expenses,
+      settlement.finalCash,
       settlement.period.substring(0, 7) as YearMonth,
-      settlement.expenseIds,
-      settlement.summary,
-      settlement.total,
       settlement.createdAt,
-      settlement.updatedAt,
     );
   }
 
@@ -74,43 +76,4 @@ export class SettlementRepository implements ISettlementRepository {
 
     return settlements.map((settlement) => this.toDomain(settlement));
   }
-
-  // async update(
-  //   consortiumId: string,
-  //   period: YearMonth,
-  //   expenseIds: string[],
-  //   summary: UnitProration[],
-  //   total: number,
-  // ): Promise<SettlementEntity> {
-  //   const settlement = await this.dataSource.transaction(async (manager) => {
-  //     const existing = await manager.findOne(SettlementOrmSchema, {
-  //       where: { consortiumId, period },
-  //     });
-
-  //     if (!existing) {
-  //       throw new Error('Settlement not found');
-  //     }
-
-  //     const result = await manager.update(
-  //       SettlementOrmSchema,
-  //       { id: existing.id },
-  //       {
-  //         expenseIds,
-  //         summary,
-  //         total,
-  //         updatedAt: new Date(),
-  //       },
-  //     );
-
-  //     return {
-  //       ...existing,
-  //       expenseIds,
-  //       summary,
-  //       total,
-  //       updatedAt: new Date(),
-  //     };
-  //   });
-
-  //   return this.toDomain(settlement);
-  // }
 }

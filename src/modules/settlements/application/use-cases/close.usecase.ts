@@ -1,13 +1,13 @@
 import { IConsortiumRepository } from 'src/modules/consortiums/domain/consortium-repository.interface';
 import { IExpenseRepository } from 'src/modules/expenses/domain/expense-repository.interface';
 import { IUnitRepository } from 'src/modules/units/domain/unit-repository.interface';
+import { UnitProration } from 'src/shared/types/unit-proration.type';
 import { isBeforeCurrentPeriod } from 'src/shared/utils/date-helpers.util';
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
+import { SettlementEntity } from '../../domain/settlement.entity';
 import { CloseSettlementInputDto } from '../dto/close.dto';
 import { ClosedSettlementException } from '../exceptions/close.exception';
 import { ConsortiumNotExistsException } from '../exceptions/consortium-not-exists.exception';
-import { SettlementEntity } from '../../domain/settlement.entity';
-import { UnitProration } from 'src/shared/types/unit-proration.type';
 import { sumProratedExpenses } from '../utils/unit-prorations.util';
 
 export class CloseSettlementUseCase {
@@ -18,52 +18,53 @@ export class CloseSettlementUseCase {
     private readonly unitRepository: IUnitRepository,
   ) {}
 
-  async execute(request: CloseSettlementInputDto): Promise<SettlementEntity> {
-    const consortium = await this.consortiumRepository.findById(
-      request.consortiumId,
-    );
-    if (!consortium) {
-      throw new ConsortiumNotExistsException(request.consortiumId);
-    }
+  execute(inputDto: CloseSettlementInputDto): Promise<SettlementEntity> {
+    throw new Error('CloseSettlementUseCase not implemented.');
+    // const consortium = await this.consortiumRepository.findById(
+    //   inputDto.consortiumId,
+    // );
+    // if (!consortium) {
+    //   throw new ConsortiumNotExistsException(inputDto.consortiumId);
+    // }
 
-    const isSettlementExists = await this.settlementRepository.findByPeriod(
-      request.consortiumId,
-      request.period,
-    );
-    if (isSettlementExists || isBeforeCurrentPeriod(request.period)) {
-      throw new ClosedSettlementException(request.period);
-    }
+    // const isSettlementExists = await this.settlementRepository.findByPeriod(
+    //   inputDto.consortiumId,
+    //   inputDto.period,
+    // );
+    // if (isSettlementExists || isBeforeCurrentPeriod(inputDto.period)) {
+    //   throw new ClosedSettlementException(inputDto.period);
+    // }
 
-    const expenses = await this.expenseRepository.findByMonth(
-      new Date(request.period),
-      consortium.id,
-    );
+    // const expenses = await this.expenseRepository.findByMonth(
+    //   new Date(inputDto.period),
+    //   consortium.id,
+    // );
 
-    const units = await this.unitRepository.findAllByConsortiumId(
-      consortium.id,
-    );
+    // const units = await this.unitRepository.findAllByConsortiumId(
+    //   consortium.id,
+    // );
 
-    const totalProrated = sumProratedExpenses(expenses);
+    // const totalProrated = sumProratedExpenses(expenses);
 
-    const summary: UnitProration[] = units.map((unit) => ({
-      unitId: unit.id,
-      label: `${unit.floor}-${unit.apartment}`,
-      percentage: unit.percentage,
-      amount: (unit.percentage / 100) * totalProrated,
-    }));
+    // const summary: UnitProration[] = units.map((unit) => ({
+    //   unitId: unit.id,
+    //   label: `${unit.floor}-${unit.apartment}`,
+    //   percentage: unit.percentage,
+    //   amount: (unit.percentage / 100) * totalProrated,
+    // }));
 
-    const settlement = await this.settlementRepository.create(
-      consortium.id,
-      request.period,
-      expenses.map((e) => e.id),
-      summary,
-      totalProrated,
-    );
+    // const settlement = await this.settlementRepository.create(
+    //   consortium.id,
+    //   inputDto.period,
+    //   expenses.map((e) => e.id),
+    //   summary,
+    //   totalProrated,
+    // );
 
-    if (!settlement) {
-      throw new Error('Settlement could not be created');
-    }
+    // if (!settlement) {
+    //   throw new Error('Settlement could not be created');
+    // }
 
-    return settlement;
+    // return settlement;
   }
 }

@@ -75,7 +75,7 @@ export const settlementReportDefinition = (
               'Porcentual',
               'Importe',
             ],
-            ...settlement.summary.map((unit, i) => [
+            ...settlement.proration.map((unit, i) => [
               { text: i + 1, alignment: 'center' },
               unit.unitId,
               unit.label || 'n/a',
