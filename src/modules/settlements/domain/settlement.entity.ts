@@ -1,6 +1,6 @@
 import { ISettlement } from 'src/shared/interfaces/settlement.interface';
-import { UnitProration } from 'src/shared/types/unit-proration.type';
-import { YearMonth } from 'src/shared/types/year-month.type';
+import { UnitProration } from './types/unit-proration.type';
+import { Period } from 'src/shared/types/period.type';
 
 export class SettlementEntity implements ISettlement {
   constructor(
@@ -12,7 +12,7 @@ export class SettlementEntity implements ISettlement {
     public readonly incomes: number,
     public readonly expenses: number,
     public readonly finalCash: number,
-    public readonly period: YearMonth,
+    public readonly period: Period,
     public readonly createdAt: Date,
   ) {}
 }

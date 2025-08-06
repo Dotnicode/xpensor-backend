@@ -1,4 +1,4 @@
-import { YearMonth } from '../types/year-month.type';
+import { Period } from '../types/period.type';
 import { UnitProration } from '../types/unit-proration.type';
 
 export interface ISettlement {
@@ -10,6 +10,6 @@ export interface ISettlement {
   incomes: number;
   expenses: number;
   finalCash: number;
-  period: YearMonth;
+  period: Period;
   createdAt: Date;
 }

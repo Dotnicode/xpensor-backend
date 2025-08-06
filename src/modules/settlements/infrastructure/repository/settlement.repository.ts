@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UnitProration } from 'src/shared/types/unit-proration.type';
-import { YearMonth } from 'src/shared/types/year-month.type';
+import { Period } from 'src/shared/types/period.type';
 import { DataSource } from 'typeorm';
 import { SettlementEntity } from '../../domain/settlement.entity';
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
@@ -20,14 +20,14 @@ export class SettlementRepository implements ISettlementRepository {
       settlement.incomes,
       settlement.expenses,
       settlement.finalCash,
-      settlement.period.substring(0, 7) as YearMonth,
+      settlement.period.substring(0, 7) as Period,
       settlement.createdAt,
     );
   }
 
   async create(
     consortiumId: string,
-    period: YearMonth,
+    period: Period,
     expenseIds: string[],
     summary: UnitProration[],
     total: number,
@@ -56,7 +56,7 @@ export class SettlementRepository implements ISettlementRepository {
 
   async findByPeriod(
     consortiumId: string,
-    period: YearMonth,
+    period: Period,
   ): Promise<SettlementEntity | null> {
     const settlement = await this.dataSource.manager.findOne(
       SettlementOrmSchema,

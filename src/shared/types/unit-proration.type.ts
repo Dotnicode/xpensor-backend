@@ -1,6 +1,2 @@
-export type UnitProration = {
-  unitId: string;
-  label: string;
-  percentage: number;
-  amount: number;
-};
+import { UnitProration as UnitProrationDomain } from 'src/modules/settlements/domain/types/unit-proration.type';
+export type UnitProration = UnitProrationDomain;

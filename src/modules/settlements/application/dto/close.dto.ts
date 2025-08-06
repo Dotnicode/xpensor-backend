@@ -1,10 +1,10 @@
 import { ISettlement } from 'src/shared/interfaces/settlement.interface';
 import { UnitProration } from 'src/shared/types/unit-proration.type';
-import { YearMonth } from 'src/shared/types/year-month.type';
+import { Period } from 'src/shared/types/period.type';
 
 export class CloseSettlementInputDto {
   consortiumId: string;
-  period: YearMonth;
+  period: Period;
 }
 
 export class CloseSettlementOutputDto implements Partial<ISettlement> {
@@ -16,6 +16,6 @@ export class CloseSettlementOutputDto implements Partial<ISettlement> {
   incomes: number;
   expenses: number;
   finalCash: number;
-  period: YearMonth;
+  period: Period;
   createdAt: Date;
 }

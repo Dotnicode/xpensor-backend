@@ -1,6 +1,6 @@
-import { YearMonth } from '../types/year-month.type';
+import { Period } from '../types/period.type';
 
-export function isBeforeCurrentPeriod(period: YearMonth) {
+export function isBeforeCurrentPeriod(period: Period) {
   const now = new Date();
   const periodDate = new Date(period);
   const nowYearMonth = now.getFullYear() * 100 + now.getMonth() + 1;

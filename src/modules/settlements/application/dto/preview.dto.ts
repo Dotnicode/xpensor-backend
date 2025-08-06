@@ -1,16 +1,16 @@
 import { ISettlement } from 'src/shared/interfaces/settlement.interface';
 import { UnitProration } from 'src/shared/types/unit-proration.type';
-import { YearMonth } from 'src/shared/types/year-month.type';
+import { Period } from 'src/shared/types/period.type';
 
 export class PreviewSettlementInputDto {
   consortiumId: string;
-  period: YearMonth;
+  period: Period;
 }
 
 // TODO -> improve the implementation type
 export class PreviewSettlementOutputDto implements Partial<ISettlement> {
   consortiumId: string;
-  period: YearMonth;
+  period: Period;
   expenseIds: string[];
   summary: UnitProration[];
   total: number;
