@@ -1,5 +1,4 @@
 import { IConsortiumRepository } from 'src/modules/consortiums/domain/consortium-repository.interface';
-import { IExpenseRepository } from 'src/modules/expenses/domain/expense-repository.interface';
 import { IUnitRepository } from 'src/modules/units/domain/interfaces/repository.interface';
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 import {
@@ -11,7 +10,6 @@ export class PreviewSettlementUseCase {
   constructor(
     private readonly settlementRepository: ISettlementRepository,
     private readonly consortiumRepository: IConsortiumRepository,
-    private readonly expenseRepository: IExpenseRepository,
     private readonly unitRepository: IUnitRepository,
   ) {}
 

@@ -1,5 +1,4 @@
 import { IConsortiumRepository } from 'src/modules/consortiums/domain/consortium-repository.interface';
-import { IExpenseRepository } from 'src/modules/expenses/domain/expense-repository.interface';
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 import { SettlementEntity } from '../../domain/settlement.entity';
 import { CloseSettlementInputDto } from '../dto/close.dto';
@@ -9,7 +8,6 @@ export class CloseSettlementUseCase {
   constructor(
     private readonly settlementRepository: ISettlementRepository,
     private readonly consortiumRepository: IConsortiumRepository,
-    private readonly expenseRepository: IExpenseRepository,
     private readonly unitRepository: IUnitRepository,
   ) {}
 

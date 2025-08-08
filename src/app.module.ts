@@ -6,8 +6,6 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserOrmSchema } from './modules/auth/infrastructure/entities/user.orm-schema';
 import { ConsortiumModule } from './modules/consortiums/consortium.module';
 import { ConsortiumOrmSchema } from './modules/consortiums/infrastructure/consortium.schema';
-import { ExpensesModule } from './modules/expenses/expenses.module';
-import { ExpenseOrmSchema } from './modules/expenses/infrastructure/expense.schema';
 import { SettlementOrmSchema } from './modules/settlements/infrastructure/repository/settlement.schema';
 import { SettlementModule } from './modules/settlements/settlement.module';
 import { TransactionOrmSchema } from './modules/transactions/infrastructure/repository/transaction.schema';
@@ -28,7 +26,6 @@ import { UnitModule } from './modules/units/unit.module';
         UserOrmSchema,
         ConsortiumOrmSchema,
         UnitOrmSchema,
-        ExpenseOrmSchema,
         SettlementOrmSchema,
         TransactionOrmSchema,
       ],
@@ -37,7 +34,6 @@ import { UnitModule } from './modules/units/unit.module';
     AuthModule,
     ConsortiumModule,
     UnitModule,
-    ExpensesModule,
     SettlementModule,
     TransactionsModule,
   ],

@@ -1,6 +1,4 @@
-import { IExpense } from 'src/shared/interfaces/expense.interface';
-
-export function sumProratedExpenses(expenses: IExpense[]) {
+export function sumProratedExpenses(expenses: any[]) {
   const totalProrated = expenses
     .filter((expense) => expense.isProrated)
     .reduce((acc, expense) => acc + expense.amount, 0);
