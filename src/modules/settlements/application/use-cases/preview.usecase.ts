@@ -1,15 +1,11 @@
 import { IConsortiumRepository } from 'src/modules/consortiums/domain/consortium-repository.interface';
 import { IExpenseRepository } from 'src/modules/expenses/domain/expense-repository.interface';
-import { IUnitRepository } from 'src/modules/units/domain/unit-repository.interface';
-import { UnitProration } from 'src/shared/types/unit-proration.type';
+import { IUnitRepository } from 'src/modules/units/domain/interfaces/repository.interface';
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 import {
   PreviewSettlementInputDto,
   PreviewSettlementOutputDto,
 } from '../dto/preview.dto';
-import { ClosedSettlementException } from '../exceptions/close.exception';
-import { ConsortiumNotExistsException } from '../exceptions/consortium-not-exists.exception';
-import { sumProratedExpenses } from '../utils/unit-prorations.util';
 
 export class PreviewSettlementUseCase {
   constructor(
