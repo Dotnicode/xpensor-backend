@@ -6,12 +6,14 @@ import { CreateUnitUseCase } from './application/create.usecase';
 import { ListUnitsByConsortiumIdUseCase } from './application/list-by-consortium-id.usecase';
 import { UnitController } from './presentation/unit.controller';
 import { UnitRepository } from './infrastructure/unit.repository';
+import { UnitRepositoryMapper } from './infrastructure/unit.mapper';
 
 @Module({
   imports: [ConsortiumModule],
   controllers: [UnitController],
   providers: [
     UnitRepository,
+    UnitRepositoryMapper,
     {
       provide: CreateUnitUseCase,
       useFactory: (
