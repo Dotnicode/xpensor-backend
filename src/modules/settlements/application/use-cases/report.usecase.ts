@@ -1,4 +1,4 @@
-import { IReportGenerator } from '../../domain/interfaces/report.interface';
+import { IReportGenerator } from '../../domain/interfaces/report-generator.interface';
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 
 export class GenerateSettlementReportUseCase {

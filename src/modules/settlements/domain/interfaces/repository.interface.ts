@@ -1,14 +1,18 @@
 import { UnitProration } from 'src/shared/types/unit-proration.type';
 import { Period } from 'src/shared/types/period.type';
 import { Settlement } from '../entities/settlement.entity';
+import { TransactionSnapshot } from '../types/transaction-snapshot.type';
 
 export interface ISettlementRepository {
   create(
     consortiumId: string,
+    transactions: TransactionSnapshot[],
+    proration: UnitProration[],
+    initialCash: number,
+    incomes: number,
+    expenses: number,
+    finalCash: number,
     period: Period,
-    expenses: string[],
-    summary: UnitProration[],
-    total: number,
   ): Promise<Settlement>;
 
   findByPeriod(
@@ -18,5 +22,5 @@ export interface ISettlementRepository {
 
   findById(settlementId: string): Promise<Settlement | null>;
 
-  list(consortiumId: string): Promise<Settlement[]>;
+  listByConsortiumId(consortiumId: string): Promise<Settlement[]>;
 }

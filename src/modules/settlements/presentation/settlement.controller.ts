@@ -12,8 +12,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ClosedSettlementException } from '../application/exceptions/close.exception';
-import { ConsortiumNotExistsException } from '../application/exceptions/consortium-not-exists.exception';
+import { ClosedSettlementException } from '../application/exceptions/closed-settlement.exception';
+import { ConsortiumNotExistsException } from '../../../shared/exceptions/consortium-not-exists.exception';
 import { CloseSettlementUseCase } from '../application/use-cases/close.usecase';
 import { ListSettlementUseCase } from '../application/use-cases/list.usecase';
 import { PreviewSettlementUseCase } from '../application/use-cases/preview.usecase';

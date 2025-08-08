@@ -41,6 +41,6 @@ import { IConsortiumRepository } from '../consortiums/domain/interfaces/reposito
       inject: [TransactionRepository],
     },
   ],
-  exports: [],
+  exports: [TransactionRepository],
 })
 export class TransactionsModule {}

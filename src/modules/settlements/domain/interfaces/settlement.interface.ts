@@ -1,10 +1,11 @@
 import { Period } from 'src/shared/types/period.type';
+import { TransactionSnapshot } from '../types/transaction-snapshot.type';
 import { UnitProration } from '../types/unit-proration.type';
 
 export interface ISettlement {
   id: string;
   consortiumId: string;
-  transactions: string[]; // TODO => implement Transaction[] type
+  transactions: TransactionSnapshot[];
   proration: UnitProration[];
   initialCash: number;
   incomes: number;

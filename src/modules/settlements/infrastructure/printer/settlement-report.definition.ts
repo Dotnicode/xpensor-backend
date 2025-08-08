@@ -77,9 +77,9 @@ export const settlementReportDefinition = (
             ],
             ...settlement.proration.map((unit, i) => [
               { text: i + 1, alignment: 'center' },
-              unit.unitId,
-              unit.label || 'n/a',
-              'n/a',
+              unit.floor,
+              unit.division,
+              unit.percentage,
               CurrencyFormatter.toARS(unit.amount),
             ]),
           ],

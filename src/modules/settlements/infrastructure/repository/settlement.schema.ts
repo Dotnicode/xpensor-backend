@@ -1,16 +1,18 @@
 import { UnitProration } from 'src/shared/types/unit-proration.type';
 import { EntitySchema } from 'typeorm';
+import { TransactionSnapshot } from '../../domain/types/transaction-snapshot.type';
+import { Period } from 'src/shared/types/period.type';
 
 export interface SettlementOrmEntity {
   id: string;
   consortiumId: string;
-  transactions: string[];
+  transactions: TransactionSnapshot[];
   proration: UnitProration[];
   initialCash: number;
   incomes: number;
   expenses: number;
   finalCash: number;
-  period: string;
+  period: Period;
   createdAt: Date;
 }
 
