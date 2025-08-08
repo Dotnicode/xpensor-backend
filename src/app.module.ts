@@ -10,6 +10,7 @@ import { ExpensesModule } from './modules/expenses/expenses.module';
 import { ExpenseOrmSchema } from './modules/expenses/infrastructure/expense.schema';
 import { SettlementOrmSchema } from './modules/settlements/infrastructure/repository/settlement.schema';
 import { SettlementModule } from './modules/settlements/settlement.module';
+import { TransactionOrmSchema } from './modules/transactions/infrastructure/repository/transaction.schema';
 import { TransactionsModule } from './modules/transactions/transactions.module';
 import { UnitOrmSchema } from './modules/units/infrastructure/unit.schema';
 import { UnitModule } from './modules/units/unit.module';
@@ -29,6 +30,7 @@ import { UnitModule } from './modules/units/unit.module';
         UnitOrmSchema,
         ExpenseOrmSchema,
         SettlementOrmSchema,
+        TransactionOrmSchema,
       ],
       synchronize: true,
     }),
@@ -39,7 +41,5 @@ import { UnitModule } from './modules/units/unit.module';
     SettlementModule,
     TransactionsModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}
