@@ -11,6 +11,7 @@ import { PreviewSettlementInputDto } from '../dto/preview.dto';
 import { SettlementOutputDto } from '../dto/settlement.dto';
 import { ClosedSettlementException } from '../exceptions/closed-settlement.exception';
 import { Money } from 'src/shared/value-objects/money.vo';
+import { prorateWithRounding } from '../utils/unit-prorations.util';
 
 export class PreviewSettlementUseCase {
   constructor(
@@ -34,7 +35,8 @@ export class PreviewSettlementUseCase {
       inputDto.consortiumId,
       inputDto.period,
     );
-    if (isSettlementExists || this.isPeriodClosed(inputDto.period)) {
+    // if (isSettlementExists || this.isPeriodClosed(inputDto.period)) {
+    if (isSettlementExists) {
       throw new ClosedSettlementException(inputDto.period);
     }
 
@@ -78,8 +80,14 @@ export class PreviewSettlementUseCase {
     const finalCash = initialCash.add(totalIncomes).subtract(totalExpenses);
 
     return {
-      transactions: transactionsSnapshot,
-      proration: unitsProration,
+      transactions: transactionsSnapshot.map((t) => ({
+        ...t,
+        amount: t.amount.amount,
+      })),
+      proration: unitsProration.map((u) => ({
+        ...u,
+        amount: u.amount.amount,
+      })),
       initialCash: initialCash.amount,
       expenses: totalExpenses.amount,
       incomes: totalIncomes.amount,
@@ -89,18 +97,25 @@ export class PreviewSettlementUseCase {
   }
 
   private isPeriodClosed(period: Period): boolean {
-    const currentDate = new Date();
-    const periodDate = new Date(period);
-    return (
-      currentDate.getMonth() > periodDate.getMonth() &&
-      currentDate.getFullYear() === periodDate.getFullYear()
-    );
+    const [py, pm] = period.split('-').map(Number);
+    const now = new Date();
+    const cy = now.getFullYear();
+    const cm = now.getMonth() + 1;
+
+    return cy > py || (cy === py && cm > pm);
   }
 
   private getPreviousPeriod(currentPeriod: Period): Period {
-    const previousPeriod = new Date(currentPeriod);
-    previousPeriod.setMonth(previousPeriod.getMonth() - 1);
-    return previousPeriod.toISOString().substring(0, 7) as Period;
+    const [year, month] = currentPeriod.split('-').map(Number);
+    let prevYear = year;
+    let prevMonth = month - 1;
+
+    if (prevMonth === 0) {
+      prevMonth = 12;
+      prevYear = year - 1;
+    }
+
+    return `${prevYear}-${String(prevMonth).padStart(2, '0')}` as Period;
   }
 
   private calculateTotals(transactions: TransactionSnapshot[]): {
@@ -127,13 +142,18 @@ export class PreviewSettlementUseCase {
     totalExpenses: Money,
   ): Promise<Array<UnitProration>> {
     const units = await this.unitRepository.listByConsortiumId(consortiumId);
-    return units.map((u) => ({
-      unitId: u.id,
-      responsibleParty: u.responsibleParty ?? null,
-      floor: u.floor,
-      division: u.division,
+
+    return prorateWithRounding(
+      units.map((u) => ({ unitId: u.id, percentage: u.percentage })),
+      totalExpenses,
+    ).map((u) => ({
+      unitId: u.unitId,
+      responsibleParty:
+        units.find((orig) => orig.id === u.unitId)?.responsibleParty ?? null,
+      floor: units.find((orig) => orig.id === u.unitId)!.floor,
+      division: units.find((orig) => orig.id === u.unitId)!.division,
       percentage: u.percentage,
-      amount: totalExpenses.multiply(u.percentage / 100),
+      amount: u.amount, // sigue siendo Money
     }));
   }
 }
