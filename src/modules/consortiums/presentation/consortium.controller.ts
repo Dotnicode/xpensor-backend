@@ -24,11 +24,12 @@ import { DeleteConsortiumUseCase } from '../application/use-cases/delete.usecase
 import { FindConsortiumByIdUseCase } from '../application/use-cases/find-by-id';
 import { ListConsortiumsByUserIdUseCase } from '../application/use-cases/list-by-user-id.usecase';
 import { UpdateConsortiumUseCase } from '../application/use-cases/update.usecase';
-import { Consortium } from '../domain/consortium.entity';
+import { Consortium } from '../domain/entities/consortium.entity';
 import { InvalidTaxIdException } from '../domain/errors/invalid-tax-id.error';
 import { NotOwnerException } from '../domain/errors/not-owner.error';
 import { CreateConsortiumRequestDto } from './dto/create-consortium.request.dto';
 import { UpdateConsortiumRequestDto } from './dto/update-consortium.request.dto';
+import { IConsortium } from '../domain/interfaces/consortium.interface';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('consortiums')
@@ -65,7 +66,7 @@ export class ConsortiumController {
   }
 
   @Get()
-  async listByUserId(@Request() req: AuthRequest): Promise<Consortium[]> {
+  async listByUserId(@Request() req: AuthRequest): Promise<IConsortium[]> {
     const { sub: userId } = req.user;
 
     const consortiums =

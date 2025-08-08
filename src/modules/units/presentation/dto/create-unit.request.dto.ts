@@ -1,15 +1,20 @@
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsAlphanumeric,
   IsNumber,
   IsNumberString,
+  IsObject,
+  IsOptional,
   IsUUID,
   Max,
   Min,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
+import { IUnit } from 'src/shared/interfaces/unit.interface';
+import { ResponsiblePartySnapshotDto } from './responsible-party-snapshot.dto';
 
-export class CreateUnitRequestDto {
+export class CreateUnitRequestDto implements Partial<IUnit> {
   @IsUUID()
   consortiumId: string;
 
@@ -20,10 +25,16 @@ export class CreateUnitRequestDto {
   @IsAlphanumeric()
   @MinLength(1)
   @Transform(({ value }: { value: string }) => value.toUpperCase())
-  apartment: string;
+  division: string;
 
   @IsNumber()
   @Min(0)
   @Max(100)
   percentage: number;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ResponsiblePartySnapshotDto)
+  @IsOptional()
+  responsibleParty?: ResponsiblePartySnapshotDto;
 }

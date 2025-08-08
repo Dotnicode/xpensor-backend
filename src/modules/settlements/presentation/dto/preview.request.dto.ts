@@ -1,5 +1,5 @@
 import { IsString, IsUUID, Matches } from 'class-validator';
-import { YearMonth } from 'src/shared/types/year-month.type';
+import { Period } from 'src/shared/types/period.type';
 
 export class PreviewSettlementRequestDto {
   @IsUUID()
@@ -10,5 +10,5 @@ export class PreviewSettlementRequestDto {
     message:
       'Period must be in YYYY-MM format with valid year (1900-2099) and month (01-12)',
   })
-  period: YearMonth;
+  period: Period;
 }

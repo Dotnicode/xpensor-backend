@@ -1,4 +1,4 @@
-import { IConsortiumRepository } from '../../domain/consortium-repository.interface';
+import { IConsortiumRepository } from 'src/shared/interfaces/consortium.interface';
 import { ConsortiumNotExistsException } from '../exceptions/consortium-not-exists.exception';
 
 export class DeleteConsortiumUseCase {
@@ -10,8 +10,6 @@ export class DeleteConsortiumUseCase {
     if (!consortium) {
       throw new ConsortiumNotExistsException(id);
     }
-
-    consortium.isAdministrator(userId);
 
     await this.consortiumRepository.delete(id);
   }

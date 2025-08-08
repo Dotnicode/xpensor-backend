@@ -1,11 +1,13 @@
 import { EntitySchema } from 'typeorm';
+import { ResponsiblePartySnapshot } from '../domain/interfaces/responsible-party-snapshot.type';
 
 export interface UnitOrmEntity {
   id: string;
-  floor: string;
-  apartment: string;
-  percentage: number;
   consortiumId: string;
+  floor: string;
+  division: string;
+  percentage: number;
+  responsibleParty?: ResponsiblePartySnapshot | null;
 }
 
 export const UnitOrmSchema = new EntitySchema<UnitOrmEntity>({
@@ -15,27 +17,30 @@ export const UnitOrmSchema = new EntitySchema<UnitOrmEntity>({
     id: {
       type: 'uuid',
       primary: true,
-      generated: 'uuid',
+    },
+    consortiumId: {
+      type: 'uuid',
+    },
+    responsibleParty: {
+      type: 'jsonb',
+      nullable: true,
     },
     floor: {
-      type: 'int',
+      type: 'varchar',
     },
-    apartment: {
+    division: {
       type: 'varchar',
     },
     percentage: {
       type: 'float',
-    },
-    consortiumId: {
-      type: 'uuid',
     },
   },
   indices: [
     {
       name: 'unique_unit_per_consortium',
       unique: true,
-      columns: ['consortiumId', 'floor', 'apartment']
-    }
+      columns: ['consortiumId', 'floor', 'division'],
+    },
   ],
   relations: {
     consortiumId: {

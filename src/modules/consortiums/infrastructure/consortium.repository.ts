@@ -2,8 +2,11 @@ import { DataSource } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
 
-import { IConsortiumRepository } from '../domain/consortium-repository.interface';
-import { Consortium } from '../domain/consortium.entity';
+import {
+  IConsortium,
+  IConsortiumRepository,
+} from 'src/shared/interfaces/consortium.interface';
+import { Consortium } from '../domain/entities/consortium.entity';
 import { ConsortiumOrmEntity, ConsortiumOrmSchema } from './consortium.schema';
 
 @Injectable()

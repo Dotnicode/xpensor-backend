@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { IConsortiumRepository } from '../../domain/consortium-repository.interface';
-import { Consortium } from '../../domain/consortium.entity';
+import { IConsortiumRepository } from 'src/shared/interfaces/consortium.interface';
+import { Consortium } from '../../domain/entities/consortium.entity';
 import { CreateConsortiumInputDto } from '../dto/create-consortium.input.dto';
 
 export class CreateConsortiumUseCase {

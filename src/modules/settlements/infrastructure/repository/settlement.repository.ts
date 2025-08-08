@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { UnitProration } from 'src/shared/types/unit-proration.type';
-import { YearMonth } from 'src/shared/types/year-month.type';
+import { Period } from 'src/shared/types/period.type';
 import { DataSource } from 'typeorm';
-import { SettlementEntity } from '../../domain/settlement.entity';
+import { Settlement } from '../../domain/entities/settlement.entity';
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 import { SettlementOrmEntity, SettlementOrmSchema } from './settlement.schema';
 
@@ -10,8 +10,8 @@ import { SettlementOrmEntity, SettlementOrmSchema } from './settlement.schema';
 export class SettlementRepository implements ISettlementRepository {
   constructor(private readonly dataSource: DataSource) {}
 
-  private toDomain(settlement: SettlementOrmEntity): SettlementEntity {
-    return new SettlementEntity(
+  private toDomain(settlement: SettlementOrmEntity): Settlement {
+    return new Settlement(
       settlement.id,
       settlement.consortiumId,
       settlement.transactions,
@@ -20,18 +20,18 @@ export class SettlementRepository implements ISettlementRepository {
       settlement.incomes,
       settlement.expenses,
       settlement.finalCash,
-      settlement.period.substring(0, 7) as YearMonth,
+      settlement.period.substring(0, 7) as Period,
       settlement.createdAt,
     );
   }
 
   async create(
     consortiumId: string,
-    period: YearMonth,
+    period: Period,
     expenseIds: string[],
     summary: UnitProration[],
     total: number,
-  ): Promise<SettlementEntity> {
+  ): Promise<Settlement> {
     const result = await this.dataSource.manager.save(SettlementOrmSchema, {
       consortiumId,
       period,
@@ -43,7 +43,7 @@ export class SettlementRepository implements ISettlementRepository {
     return this.toDomain(result);
   }
 
-  async findById(settlementId: string): Promise<SettlementEntity | null> {
+  async findById(settlementId: string): Promise<Settlement | null> {
     const settlement = await this.dataSource.manager.findOne(
       SettlementOrmSchema,
       {
@@ -56,8 +56,8 @@ export class SettlementRepository implements ISettlementRepository {
 
   async findByPeriod(
     consortiumId: string,
-    period: YearMonth,
-  ): Promise<SettlementEntity | null> {
+    period: Period,
+  ): Promise<Settlement | null> {
     const settlement = await this.dataSource.manager.findOne(
       SettlementOrmSchema,
       {
@@ -68,7 +68,7 @@ export class SettlementRepository implements ISettlementRepository {
     return settlement ? this.toDomain(settlement) : null;
   }
 
-  async list(consortiumId: string): Promise<SettlementEntity[]> {
+  async list(consortiumId: string): Promise<Settlement[]> {
     const settlements = await this.dataSource.manager.findBy(
       SettlementOrmSchema,
       { consortiumId },

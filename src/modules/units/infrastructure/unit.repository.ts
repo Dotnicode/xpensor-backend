@@ -1,26 +1,21 @@
 import { DataSource } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
+import { Unit } from '../domain/entities/unit.entity';
 import { UnitExistsException } from '../domain/exceptions/unit-exists.exception';
-import { IUnitRepository } from '../domain/unit-repository.interface';
-import { UnitEntity } from '../domain/unit.entity';
-import { UnitOrmEntity, UnitOrmSchema } from './unit.schema';
+import { IUnitRepository } from '../domain/interfaces/repository.interface';
+import { IUnit } from '../domain/interfaces/unit.interface';
+import { UnitRepositoryMapper } from './unit.mapper';
+import { UnitOrmSchema } from './unit.schema';
 
 @Injectable()
 export class UnitRepository implements IUnitRepository {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly mapper: UnitRepositoryMapper,
+  ) {}
 
-  private toDomain(raw: UnitOrmEntity): UnitEntity {
-    return new UnitEntity(
-      raw.id,
-      raw.consortiumId,
-      raw.floor,
-      raw.apartment,
-      raw.percentage,
-    );
-  }
-
-  async create(unit: UnitEntity): Promise<void> {
+  async create(unit: Unit): Promise<void> {
     await this.dataSource.transaction(async (manager) => {
       const isUnitExists = await manager
         .createQueryBuilder(UnitOrmSchema, 'unit')
@@ -28,14 +23,14 @@ export class UnitRepository implements IUnitRepository {
           consortiumId: unit.consortiumId,
         })
         .andWhere('unit.floor = :floor', { floor: unit.floor })
-        .andWhere('unit.apartment = :apartment', { apartment: unit.apartment })
+        .andWhere('unit.division = :division', { division: unit.division })
         .setLock('pessimistic_write')
         .getOne();
 
       if (isUnitExists) {
         throw new UnitExistsException({
           floor: unit.floor,
-          apartment: unit.apartment,
+          division: unit.division,
         });
       }
 
@@ -43,15 +38,25 @@ export class UnitRepository implements IUnitRepository {
     });
   }
 
-  async findAllByConsortiumId(consortiumId: string): Promise<UnitEntity[]> {
+  async listByConsortiumId(consortiumId: string): Promise<IUnit[]> {
     const rows = await this.dataSource
       .getRepository(UnitOrmSchema)
       .createQueryBuilder('u')
       .where('u.consortiumId = :consortiumId', { consortiumId })
       .orderBy('u.floor', 'ASC')
-      .addOrderBy('u.apartment', 'ASC')
+      .addOrderBy('u.division', 'ASC')
       .getMany();
 
-    return rows.map((row) => this.toDomain(row));
+    return this.mapper.toDomainArray(rows);
+  }
+
+  async findById(id: string): Promise<IUnit | null> {
+    const unit = await this.dataSource
+      .getRepository(UnitOrmSchema)
+      .createQueryBuilder('u')
+      .where('u.id = :id', { id })
+      .getOne();
+
+    return unit ? this.mapper.toDomain(unit) : null;
   }
 }

@@ -1,5 +1,5 @@
-import { SettlementEntity } from '../settlement.entity';
+import { Settlement } from '../entities/settlement.entity';
 
 export interface IReportGenerator {
-  generate(settlement: SettlementEntity): Promise<Buffer>;
+  generate(settlement: Settlement): Promise<Buffer>;
 }
