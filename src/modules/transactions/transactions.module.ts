@@ -10,6 +10,7 @@ import { ConsortiumRepository } from '../consortiums/infrastructure/consortium.r
 import { UnitRepository } from '../units/infrastructure/unit.repository';
 import { UnitModule } from '../units/unit.module';
 import { ConsortiumModule } from '../consortiums/consortium.module';
+import { ListTransactionsByPeriodUseCase } from './application/use-cases/list-by-period.usecase';
 
 @Module({
   imports: [UnitModule, ConsortiumModule],
@@ -31,6 +32,13 @@ import { ConsortiumModule } from '../consortiums/consortium.module';
         );
       },
       inject: [ConsortiumRepository, UnitRepository, TransactionRepository],
+    },
+    {
+      provide: ListTransactionsByPeriodUseCase,
+      useFactory: (transactionRepository: ITransactionRepository) => {
+        return new ListTransactionsByPeriodUseCase(transactionRepository);
+      },
+      inject: [TransactionRepository],
     },
   ],
   exports: [],

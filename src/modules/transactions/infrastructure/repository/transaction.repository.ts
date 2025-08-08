@@ -19,7 +19,7 @@ export class TransactionRepository implements ITransactionRepository {
       .save(this.mapper.toOrm(transaction));
   }
 
-  async findByPeriod(
+  async listByPeriod(
     period: Period,
     consortiumId: string,
   ): Promise<ITransaction[]> {
