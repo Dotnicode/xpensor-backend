@@ -1,13 +1,13 @@
 import { randomUUID } from 'crypto';
-import { IConsortiumRepository } from 'src/modules/consortiums/domain/consortium-repository.interface';
-import { IUnitRepository } from 'src/modules/units/domain/interfaces/repository.interface';
 import { BaseUseCase } from 'src/shared/interfaces/base-usecase.interface';
+import { IUnitRepository } from 'src/shared/interfaces/unit.interface';
 import { Transaction } from '../../domain/entities/transaction.entity';
 import { ITransactionRepository } from '../../domain/interfaces/repository.interface';
 import {
   TransactionInputDto,
   TransactionOutputDto,
 } from '../dto/transaction.dto';
+import { IConsortiumRepository } from 'src/shared/interfaces/consortium.interface';
 
 export class CreateTransactionUseCase implements BaseUseCase {
   constructor(

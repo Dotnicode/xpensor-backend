@@ -1,6 +1,6 @@
-import { IConsortiumRepository } from 'src/modules/consortiums/domain/consortium-repository.interface';
+import { IConsortiumRepository } from 'src/modules/consortiums/domain/interfaces/repository.interface';
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
-import { SettlementEntity } from '../../domain/settlement.entity';
+import { Settlement } from '../../domain/entities/settlement.entity';
 import { CloseSettlementInputDto } from '../dto/close.dto';
 import { IUnitRepository } from 'src/modules/units/domain/interfaces/repository.interface';
 
@@ -11,7 +11,7 @@ export class CloseSettlementUseCase {
     private readonly unitRepository: IUnitRepository,
   ) {}
 
-  execute(inputDto: CloseSettlementInputDto): Promise<SettlementEntity> {
+  execute(inputDto: CloseSettlementInputDto): Promise<Settlement> {
     throw new Error('CloseSettlementUseCase not implemented.');
     // const consortium = await this.consortiumRepository.findById(
     //   inputDto.consortiumId,

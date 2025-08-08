@@ -1,7 +1,2 @@
-export interface IConsortium {
-  id: string;
-  name: string;
-  taxId: string;
-  address: string;
-  userId: string;
-}
+export { IConsortium } from 'src/modules/consortiums/domain/interfaces/consortium.interface';
+export { IConsortiumRepository } from 'src/modules/consortiums/domain/interfaces/repository.interface';

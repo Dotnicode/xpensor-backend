@@ -1,10 +1,10 @@
-import { IConsortiumRepository } from 'src/modules/consortiums/domain/consortium-repository.interface';
+import { IConsortiumRepository } from 'src/shared/interfaces/consortium.interface';
 import { v4 as uuidv4 } from 'uuid';
+import { Unit } from '../domain/entities/unit.entity';
 import { ConsortiumNotExistsException } from '../domain/exceptions/consortium-not-exists.exception';
 import { UnitExistsException } from '../domain/exceptions/unit-exists.exception';
-import { Unit } from '../domain/entities/unit.entity';
-import { CreateUnitInputDto } from './dto/create-unit.input.dto';
 import { IUnitRepository } from '../domain/interfaces/repository.interface';
+import { CreateUnitInputDto } from './dto/create-unit.input.dto';
 
 export class CreateUnitUseCase {
   constructor(

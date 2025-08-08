@@ -1,8 +1,8 @@
-import { ISettlement } from 'src/shared/interfaces/settlement.interface';
-import { UnitProration } from './types/unit-proration.type';
+import { ISettlement } from '../interfaces/settlement.interface';
+import { UnitProration } from '../types/unit-proration.type';
 import { Period } from 'src/shared/types/period.type';
 
-export class SettlementEntity implements ISettlement {
+export class Settlement implements ISettlement {
   constructor(
     public readonly id: string,
     public readonly consortiumId: string,

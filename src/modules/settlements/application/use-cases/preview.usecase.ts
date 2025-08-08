@@ -1,10 +1,10 @@
-import { IConsortiumRepository } from 'src/modules/consortiums/domain/consortium-repository.interface';
 import { IUnitRepository } from 'src/modules/units/domain/interfaces/repository.interface';
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 import {
   PreviewSettlementInputDto,
   PreviewSettlementOutputDto,
 } from '../dto/preview.dto';
+import { IConsortiumRepository } from 'src/modules/consortiums/domain/interfaces/repository.interface';
 
 export class PreviewSettlementUseCase {
   constructor(

@@ -1,5 +1,8 @@
-import { IConsortiumRepository } from '../../domain/consortium-repository.interface';
-import { Consortium } from '../../domain/consortium.entity';
+import {
+  IConsortium,
+  IConsortiumRepository,
+} from 'src/shared/interfaces/consortium.interface';
+import { Consortium } from '../../domain/entities/consortium.entity';
 import { UpdateConsortiumInputDto } from '../dto/update-consortium.input.dto';
 import { ConsortiumNotExistsException } from '../exceptions/consortium-not-exists.exception';
 
@@ -16,8 +19,6 @@ export class UpdateConsortiumUseCase {
     if (!existingConsortium) {
       throw new ConsortiumNotExistsException(id);
     }
-
-    existingConsortium.isAdministrator(userId);
 
     const updatedConsortium = new Consortium(
       id,
