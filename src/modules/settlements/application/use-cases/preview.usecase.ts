@@ -10,6 +10,7 @@ import { TransactionSnapshot } from '../../domain/types/transaction-snapshot.typ
 import { PreviewSettlementInputDto } from '../dto/preview.dto';
 import { SettlementOutputDto } from '../dto/settlement.dto';
 import { ClosedSettlementException } from '../exceptions/closed-settlement.exception';
+import { Money } from 'src/shared/value-objects/money.vo';
 
 export class PreviewSettlementUseCase {
   constructor(
@@ -43,16 +44,16 @@ export class PreviewSettlementUseCase {
     );
 
     const transactionsSnapshot: TransactionSnapshot[] = transactions.map(
-      (transaction) => ({
-        id: transaction.id,
-        consortiumId: transaction.consortiumId,
-        unitId: transaction.unitId,
-        type: transaction.type,
-        source: transaction.source,
-        description: transaction.description,
-        amount: transaction.amount,
-        period: transaction.period,
-        createdAt: transaction.createdAt,
+      (t) => ({
+        id: t.id,
+        consortiumId: t.consortiumId,
+        unitId: t.unitId,
+        type: t.type,
+        source: t.source,
+        description: t.description,
+        amount: t.amount,
+        period: t.period,
+        createdAt: t.createdAt,
       }),
     );
 
@@ -62,36 +63,27 @@ export class PreviewSettlementUseCase {
       previousPeriod,
     );
 
-    let initialCash = 0;
-    if (previousSettlement) {
-      initialCash = previousSettlement.finalCash;
-    }
+    const initialCash = previousSettlement
+      ? previousSettlement.finalCash
+      : Money.zero();
 
-    const totalExpenses = this.calculateTotalExpenses(transactionsSnapshot);
-    const totalIncomes = this.calculateTotalIncomes(transactionsSnapshot);
+    const { totalExpenses, totalIncomes } =
+      this.calculateTotals(transactionsSnapshot);
 
-    const unitsProration: UnitProration[] = await this.unitRepository
-      .listByConsortiumId(inputDto.consortiumId)
-      .then((units) =>
-        units.map((unit) => ({
-          unitId: unit.id,
-          responsibleParty: unit.responsibleParty ?? null,
-          floor: unit.floor,
-          division: unit.division,
-          percentage: unit.percentage,
-          amount: (unit.percentage / 100) * totalExpenses,
-        })),
-      );
+    const unitsProration = await this.calculateUnitsProration(
+      inputDto.consortiumId,
+      totalExpenses,
+    );
 
-    const finalCash = Number(initialCash + totalIncomes - totalExpenses);
+    const finalCash = initialCash.add(totalIncomes).subtract(totalExpenses);
 
     return {
       transactions: transactionsSnapshot,
       proration: unitsProration,
-      initialCash: Number(initialCash),
-      expenses: Number(totalExpenses),
-      incomes: Number(totalIncomes),
-      finalCash: Number(finalCash),
+      initialCash: initialCash.amount,
+      expenses: totalExpenses.amount,
+      incomes: totalIncomes.amount,
+      finalCash: finalCash.amount,
       period: inputDto.period,
     };
   }
@@ -111,21 +103,37 @@ export class PreviewSettlementUseCase {
     return previousPeriod.toISOString().substring(0, 7) as Period;
   }
 
-  private getNextPeriod(currentPeriod: Period): Period {
-    const nextPeriod = new Date(currentPeriod);
-    nextPeriod.setMonth(nextPeriod.getMonth() + 1);
-    return nextPeriod.toISOString().substring(0, 7) as Period;
+  private calculateTotals(transactions: TransactionSnapshot[]): {
+    totalExpenses: Money;
+    totalIncomes: Money;
+  } {
+    let totalExpenses = Money.zero();
+    let totalIncomes = Money.zero();
+
+    for (const t of transactions) {
+      const m = t.amount.abs();
+      if (t.type === TransactionType.Expense) {
+        totalExpenses = totalExpenses.add(m);
+      }
+      if (t.type === TransactionType.Income) {
+        totalIncomes = totalIncomes.add(m);
+      }
+    }
+    return { totalExpenses, totalIncomes };
   }
 
-  private calculateTotalExpenses(transactions: TransactionSnapshot[]): number {
-    return transactions
-      .filter((t) => t.type === TransactionType.Expense)
-      .reduce((acc, t) => acc + t.amount * -1, 0);
-  }
-
-  private calculateTotalIncomes(transactions: TransactionSnapshot[]): number {
-    return transactions
-      .filter((t) => t.type === TransactionType.Income)
-      .reduce((acc, t) => acc + t.amount, 0);
+  private async calculateUnitsProration(
+    consortiumId: string,
+    totalExpenses: Money,
+  ): Promise<Array<UnitProration>> {
+    const units = await this.unitRepository.listByConsortiumId(consortiumId);
+    return units.map((u) => ({
+      unitId: u.id,
+      responsibleParty: u.responsibleParty ?? null,
+      floor: u.floor,
+      division: u.division,
+      percentage: u.percentage,
+      amount: totalExpenses.multiply(u.percentage / 100),
+    }));
   }
 }

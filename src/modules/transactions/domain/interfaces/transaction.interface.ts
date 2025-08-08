@@ -1,3 +1,4 @@
+import { Money } from 'src/shared/value-objects/money.vo';
 import { TransactionSource } from '../enums/transaction-source.enum';
 import { TransactionType } from '../enums/transaction-type.enum';
 import { Period } from '../types/period.type';
@@ -9,7 +10,7 @@ export interface ITransaction {
   type: TransactionType;
   source: TransactionSource;
   description: string;
-  amount: number;
+  amount: Money;
   period: Period;
   createdAt: Date;
 }

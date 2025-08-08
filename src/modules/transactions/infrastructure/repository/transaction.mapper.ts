@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { TransactionSource } from 'src/shared/enums/transaction-source.enum';
+import { TransactionType } from 'src/shared/enums/transaction-type.enum';
 import { RepositoryBaseMapper } from 'src/shared/utils/repository-base-mapper.util';
+import { Money } from 'src/shared/value-objects/money.vo';
 import { Transaction } from '../../domain/entities/transaction.entity';
 import { TransacionOrmEntity } from '../repository/transaction.schema';
-import { TransactionType } from 'src/shared/enums/transaction-type.enum';
-import { TransactionSource } from 'src/shared/enums/transaction-source.enum';
-import { Period } from 'src/shared/types/period.type';
 
 @Injectable()
 export class TransactionRepositoryMapper extends RepositoryBaseMapper<
@@ -19,8 +19,8 @@ export class TransactionRepositoryMapper extends RepositoryBaseMapper<
       orm.type as TransactionType,
       orm.source as TransactionSource,
       orm.description,
-      orm.amount,
-      orm.period.substring(0, 7) as Period,
+      Money.fromCents(orm.amount_cents),
+      orm.period,
       orm.createdAt,
     );
   }
@@ -33,7 +33,7 @@ export class TransactionRepositoryMapper extends RepositoryBaseMapper<
       type: domain.type,
       source: domain.source,
       description: domain.description,
-      amount: domain.amount,
+      amount_cents: domain.amount.cents,
       period: domain.period,
       createdAt: domain.createdAt,
     };

@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto';
 import { BaseUseCase } from 'src/shared/interfaces/base-usecase.interface';
+import { IConsortiumRepository } from 'src/shared/interfaces/consortium.interface';
 import { IUnitRepository } from 'src/shared/interfaces/unit.interface';
 import { Transaction } from '../../domain/entities/transaction.entity';
 import { ITransactionRepository } from '../../domain/interfaces/repository.interface';
@@ -7,7 +8,7 @@ import {
   TransactionInputDto,
   TransactionOutputDto,
 } from '../dto/transaction.dto';
-import { IConsortiumRepository } from 'src/shared/interfaces/consortium.interface';
+import { Money } from 'src/shared/value-objects/money.vo';
 
 export class CreateTransactionUseCase implements BaseUseCase {
   constructor(
@@ -16,20 +17,16 @@ export class CreateTransactionUseCase implements BaseUseCase {
     private readonly transactionRepository: ITransactionRepository,
   ) {}
 
-  async execute(
-    transactionInputDto: TransactionInputDto,
-  ): Promise<TransactionOutputDto> {
+  async execute(request: TransactionInputDto): Promise<TransactionOutputDto> {
     const consortium = await this.consortiumRepository.findById(
-      transactionInputDto.consortiumId,
+      request.consortiumId,
     );
     if (!consortium) {
       throw new Error('Consortium not found');
     }
 
-    if (transactionInputDto.unitId) {
-      const unit = await this.unitRepository.findById(
-        transactionInputDto.unitId,
-      );
+    if (request.unitId) {
+      const unit = await this.unitRepository.findById(request.unitId);
       if (!unit) {
         throw new Error('Unit not found');
       }
@@ -37,22 +34,23 @@ export class CreateTransactionUseCase implements BaseUseCase {
 
     const transaction = new Transaction(
       randomUUID(),
-      transactionInputDto.consortiumId,
-      transactionInputDto.unitId ?? null,
-      transactionInputDto.type,
-      transactionInputDto.source,
-      transactionInputDto.description,
-      transactionInputDto.amount,
-      transactionInputDto.period,
+      request.consortiumId,
+      request.unitId ?? null,
+      request.type,
+      request.source,
+      request.description,
+      Money.fromAmount(request.amount),
+      request.period,
       new Date(),
     );
-    const db = await this.transactionRepository.create(transaction);
+
+    await this.transactionRepository.create(transaction);
 
     return {
       id: transaction.id,
       consortiumId: transaction.consortiumId,
       unitId: transaction.unitId ?? null,
-      amount: transaction.amount,
+      amount: transaction.amount.amount,
       type: transaction.type,
       source: transaction.source,
       period: transaction.period,

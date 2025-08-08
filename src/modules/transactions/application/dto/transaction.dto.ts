@@ -1,9 +1,8 @@
 import { TransactionSource } from 'src/shared/enums/transaction-source.enum';
 import { TransactionType } from 'src/shared/enums/transaction-type.enum';
-import { ITransaction } from '../../domain/interfaces/transaction.interface';
 import { Period } from 'src/shared/types/period.type';
 
-export class TransactionInputDto implements Partial<ITransaction> {
+export class TransactionInputDto {
   consortiumId: string;
   unitId?: string;
   amount: number;
@@ -13,7 +12,7 @@ export class TransactionInputDto implements Partial<ITransaction> {
   period: Period;
 }
 
-export class TransactionOutputDto implements Partial<ITransaction> {
+export class TransactionOutputDto {
   id: string;
   consortiumId: string;
   unitId: string | null;

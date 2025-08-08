@@ -1,3 +1,4 @@
+import { TransactionOutputDto } from '../../application/dto/transaction.dto';
 import { Period } from '../types/period.type';
 import { ITransaction } from './transaction.interface';
 

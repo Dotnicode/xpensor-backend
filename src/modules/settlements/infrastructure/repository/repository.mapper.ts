@@ -2,6 +2,7 @@ import { RepositoryBaseMapper } from 'src/shared/utils/repository-base-mapper.ut
 import { Settlement } from '../../domain/entities/settlement.entity';
 import { TransactionSnapshot } from '../../domain/types/transaction-snapshot.type';
 import { SettlementOrmEntity } from './settlement.schema';
+import { Money } from 'src/shared/value-objects/money.vo';
 
 export class SettlementRepositoryMapper extends RepositoryBaseMapper<
   Settlement,
@@ -13,10 +14,10 @@ export class SettlementRepositoryMapper extends RepositoryBaseMapper<
       orm.consortiumId,
       orm.transactions as unknown as TransactionSnapshot[],
       orm.proration,
-      orm.initialCash,
-      orm.incomes,
-      orm.expenses,
-      orm.finalCash,
+      Money.fromCents(orm.initialCash_cents),
+      Money.fromCents(orm.incomes_cents),
+      Money.fromCents(orm.expenses_cents),
+      Money.fromCents(orm.finalCash_cents),
       orm.period,
       orm.createdAt,
     );
@@ -27,10 +28,10 @@ export class SettlementRepositoryMapper extends RepositoryBaseMapper<
       consortiumId: domain.consortiumId,
       transactions: domain.transactions,
       proration: domain.proration,
-      initialCash: domain.initialCash,
-      incomes: domain.incomes,
-      expenses: domain.expenses,
-      finalCash: domain.finalCash,
+      initialCash_cents: domain.initialCash.cents,
+      incomes_cents: domain.incomes.cents,
+      expenses_cents: domain.expenses.cents,
+      finalCash_cents: domain.finalCash.cents,
       period: domain.period,
       createdAt: domain.createdAt,
     };

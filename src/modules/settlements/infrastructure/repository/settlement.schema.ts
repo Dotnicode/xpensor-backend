@@ -8,10 +8,10 @@ export interface SettlementOrmEntity {
   consortiumId: string;
   transactions: TransactionSnapshot[];
   proration: UnitProration[];
-  initialCash: number;
-  incomes: number;
-  expenses: number;
-  finalCash: number;
+  initialCash_cents: number;
+  incomes_cents: number;
+  expenses_cents: number;
+  finalCash_cents: number;
   period: Period;
   createdAt: Date;
 }
@@ -36,17 +36,17 @@ export const SettlementOrmSchema = new EntitySchema<SettlementOrmEntity>({
       type: 'jsonb',
       nullable: false,
     },
-    initialCash: {
-      type: 'float',
+    initialCash_cents: {
+      type: 'int',
     },
-    incomes: {
-      type: 'float',
+    incomes_cents: {
+      type: 'int',
     },
-    expenses: {
-      type: 'float',
+    expenses_cents: {
+      type: 'int',
     },
-    finalCash: {
-      type: 'float',
+    finalCash_cents: {
+      type: 'int',
     },
     period: {
       type: 'varchar',

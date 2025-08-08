@@ -1,4 +1,5 @@
 import { ResponsiblePartySnapshot } from 'src/shared/interfaces/responsible-party-snapshot.interface';
+import { Money } from 'src/shared/value-objects/money.vo';
 
 export type UnitProration = {
   unitId: string;
@@ -6,5 +7,5 @@ export type UnitProration = {
   floor: string;
   division: string;
   percentage: number;
-  amount: number;
+  amount: Money;
 };

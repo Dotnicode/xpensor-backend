@@ -10,6 +10,21 @@ export class ListTransactionsByPeriodUseCase implements BaseUseCase {
     period: Period,
     consortiumId: string,
   ): Promise<TransactionOutputDto[]> {
-    return await this.transactionRepository.listByPeriod(period, consortiumId);
+    const transactions = await this.transactionRepository.listByPeriod(
+      period,
+      consortiumId,
+    );
+
+    return transactions.map((t) => ({
+      id: t.id,
+      consortiumId: t.consortiumId,
+      unitId: t.unitId,
+      type: t.type,
+      source: t.source,
+      description: t.description,
+      amount: t.amount.amount,
+      period: t.period,
+      createdAt: t.createdAt,
+    }));
   }
 }
