@@ -7,6 +7,7 @@ import { ListUnitsByConsortiumIdUseCase } from './application/list-by-consortium
 import { UnitController } from './presentation/unit.controller';
 import { UnitRepository } from './infrastructure/unit.repository';
 import { UnitRepositoryMapper } from './infrastructure/unit.mapper';
+import { FindUnitByIdUseCase } from './application/dto/find-by-id.usecase';
 
 @Module({
   imports: [ConsortiumModule],
@@ -28,6 +29,13 @@ import { UnitRepositoryMapper } from './infrastructure/unit.mapper';
       provide: ListUnitsByConsortiumIdUseCase,
       useFactory: (repository: UnitRepository) => {
         return new ListUnitsByConsortiumIdUseCase(repository);
+      },
+      inject: [UnitRepository],
+    },
+    {
+      provide: FindUnitByIdUseCase,
+      useFactory: (repository: UnitRepository) => {
+        return new FindUnitByIdUseCase(repository);
       },
       inject: [UnitRepository],
     },

@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   ParseUUIDPipe,
   Post,
   Query,
@@ -11,6 +12,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 
 import { CreateUnitUseCase } from '../application/create.usecase';
+import { FindUnitByIdUseCase } from '../application/dto/find-by-id.usecase';
 import { ListUnitsByConsortiumIdUseCase } from '../application/list-by-consortium-id.usecase';
 import { ConsortiumNotExistsException } from '../domain/exceptions/consortium-not-exists.exception';
 import { UnitExistsException } from '../domain/exceptions/unit-exists.exception';
@@ -22,6 +24,7 @@ export class UnitController {
   constructor(
     private readonly createUnitUseCase: CreateUnitUseCase,
     private readonly findAllUnitsByConsortiumIdUseCase: ListUnitsByConsortiumIdUseCase,
+    private readonly findByIdUseCase: FindUnitByIdUseCase,
   ) {}
 
   @Post()
@@ -43,7 +46,18 @@ export class UnitController {
   }
 
   @Get()
-  async getUnits(@Query('consortiumId', ParseUUIDPipe) consortiumId: string) {
+  async listUnitsByConsortiumId(
+    @Query('consortiumId', ParseUUIDPipe) consortiumId: string,
+  ) {
     return await this.findAllUnitsByConsortiumIdUseCase.execute(consortiumId);
+  }
+
+  @Get(':id')
+  async findById(@Param('id', ParseUUIDPipe) id: string) {
+    const unit = await this.findByIdUseCase.execute(id);
+    if (!unit) {
+      throw new BadRequestException('Unit not found');
+    }
+    return unit;
   }
 }

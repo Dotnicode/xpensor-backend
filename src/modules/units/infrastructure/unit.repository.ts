@@ -49,4 +49,14 @@ export class UnitRepository implements IUnitRepository {
 
     return this.mapper.toDomainArray(rows);
   }
+
+  async findById(id: string): Promise<IUnit | null> {
+    const unit = await this.dataSource
+      .getRepository(UnitOrmSchema)
+      .createQueryBuilder('u')
+      .where('u.id = :id', { id })
+      .getOne();
+
+    return unit ? this.mapper.toDomain(unit) : null;
+  }
 }
