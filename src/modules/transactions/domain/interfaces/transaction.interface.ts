@@ -5,7 +5,7 @@ import { Period } from '../types/period.type';
 export interface ITransaction {
   id: string;
   consortiumId: string;
-  unitId: string;
+  unitId: string | null;
   type: TransactionType;
   source: TransactionSource;
   description: string;

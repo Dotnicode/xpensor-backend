@@ -5,7 +5,7 @@ import { EntitySchema } from 'typeorm';
 export interface TransacionOrmEntity {
   id: string;
   consortiumId: string;
-  unitId: string;
+  unitId: string | null;
   type: string;
   source: string;
   description: string;
@@ -26,6 +26,7 @@ export const TransactionOrmSchema = new EntitySchema<TransacionOrmEntity>({
     },
     unitId: {
       type: 'uuid',
+      nullable: true,
     },
     type: {
       type: 'enum',
