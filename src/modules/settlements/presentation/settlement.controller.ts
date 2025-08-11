@@ -2,9 +2,6 @@ import {
   BadRequestException,
   Controller,
   Get,
-  Header,
-  HttpCode,
-  HttpStatus,
   InternalServerErrorException,
   Post,
   Query,
@@ -12,16 +9,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ClosedSettlementException } from '../application/exceptions/closed-settlement.exception';
+import { Response } from 'express';
 import { ConsortiumNotExistsException } from '../../../shared/exceptions/consortium-not-exists.exception';
+import { ClosedSettlementException } from '../application/exceptions/closed-settlement.exception';
 import { CloseSettlementUseCase } from '../application/use-cases/close.usecase';
 import { ListSettlementUseCase } from '../application/use-cases/list.usecase';
 import { PreviewSettlementUseCase } from '../application/use-cases/preview.usecase';
+import { GenerateSettlementReportUseCase } from '../application/use-cases/report.usecase';
 import { CloseSettlementRequestDto } from './dto/close.request.dto';
 import { PreviewSettlementRequestDto } from './dto/preview.request.dto';
 import { ReportSettlementRequestDto } from './dto/report.request.dto';
-import { GenerateSettlementReportUseCase } from '../application/use-cases/report.usecase';
-import { Response } from 'express';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('settlements')
@@ -54,9 +51,7 @@ export class SettlementController {
   }
 
   @Get()
-  async listSettlementsByConsortiumId(
-    @Query('consortiumId') consortiumId: string,
-  ) {
+  async listSettlementsByConsortiumId(@Query('consortiumId') consortiumId: string) {
     return this.listSettlementUseCase.execute(consortiumId);
   }
 
@@ -75,6 +70,7 @@ export class SettlementController {
         throw new BadRequestException(error.message);
       }
 
+      console.log(error);
       throw new InternalServerErrorException(error);
     }
   }
@@ -86,9 +82,7 @@ export class SettlementController {
   ) {
     response.setHeader('Content-Type', 'application/pdf');
 
-    const pdf = await this.generateSettlementReportUseCase.execute(
-      query.settlementId,
-    );
+    const pdf = await this.generateSettlementReportUseCase.execute(query.settlementId);
 
     return response.send(pdf);
   }
