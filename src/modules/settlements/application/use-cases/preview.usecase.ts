@@ -10,7 +10,6 @@ import { ISettlementRepository } from '../../domain/interfaces/repository.interf
 import { TransactionSnapshot } from '../../domain/types/transaction-snapshot.type';
 import { PreviewSettlementInputDto } from '../dto/preview.dto';
 import { SettlementOutputDto } from '../dto/settlement.dto';
-import { ClosedSettlementException } from '../exceptions/closed-settlement.exception';
 import { calculateTotals } from '../utils/calculate-total.util';
 import { prorateWithRounding } from '../utils/proration-rounding.util';
 
@@ -32,10 +31,8 @@ export class PreviewSettlementUseCase {
       inputDto.consortiumId,
       inputDto.period,
     );
-
-    if (isSettlementExists || this.isPeriodClosed(inputDto.period)) {
-      throw new ClosedSettlementException(inputDto.period);
-    }
+    const isPeriodClosed = this.isPreviousPeriod(inputDto.period);
+    const closed = !!isSettlementExists || isPeriodClosed;
 
     const transactions = await this.transactionRepository.listByPeriod(
       inputDto.period,
@@ -81,13 +78,14 @@ export class PreviewSettlementUseCase {
       incomes: totalIncomes.amount,
       finalCash: finalCash.amount,
       period: inputDto.period,
+      closed,
     };
   }
 
-  private isPeriodClosed(period: PeriodString): boolean {
+  private isPreviousPeriod(period: PeriodString): boolean {
     const currPeriod = Period.fromString(period);
     const now = Period.fromDate();
-    return currPeriod.isAfter(now);
+    return currPeriod.isBefore(now);
   }
 
   private async calculateUnitsProration(

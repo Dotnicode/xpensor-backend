@@ -9,5 +9,6 @@ export class SettlementOutputDto {
   incomes: number;
   expenses: number;
   finalCash: number;
+  closed: boolean;
   period: PeriodString;
 }
