@@ -59,12 +59,12 @@ export class Period {
   }
 
   // ---------- Navigation ----------
-  previous(): Period {
+  previousPeriod(): Period {
     return this._month > 1
       ? new Period(this._year, this._month - 1)
       : new Period(this._year - 1, 12);
   }
-  next(): Period {
+  nextPeriod(): Period {
     return this._month < 12
       ? new Period(this._year, this._month + 1)
       : new Period(this._year + 1, 1);
@@ -73,7 +73,7 @@ export class Period {
   // ---------- Utilities ----------
   toDateRange(): { start: Date; endExclusive: Date } {
     const start = new Date(this._year, this._month - 1, 1, 0, 0, 0, 0);
-    const endExclusive = this.next().asMonthStartDate();
+    const endExclusive = this.nextPeriod().asMonthStartDate();
     return { start, endExclusive };
   }
   asMonthStartDate(): Date {
