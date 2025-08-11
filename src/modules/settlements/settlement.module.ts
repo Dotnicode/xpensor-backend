@@ -11,7 +11,7 @@ import { UnitRepository } from '../units/infrastructure/unit.repository';
 import { UnitModule } from '../units/unit.module';
 import { CloseSettlementUseCase } from './application/use-cases/close.usecase';
 import { ListSettlementUseCase } from './application/use-cases/list.usecase';
-import { PreviewSettlementUseCase } from './application/use-cases/preview.usecase';
+import { FindSettlementByPeriodUseCase } from './application/use-cases/find-by-period.usecase';
 import { GenerateSettlementReportUseCase } from './application/use-cases/report.usecase';
 import type { IReportGenerator } from './domain/interfaces/report-generator.interface';
 import { ISettlementRepository } from './domain/interfaces/repository.interface';
@@ -32,26 +32,21 @@ import { SettlementController } from './presentation/settlement.controller';
       useClass: PdfSettlementReportService,
     },
     {
-      provide: PreviewSettlementUseCase,
+      provide: FindSettlementByPeriodUseCase,
       useFactory: (
         settlementRepository: ISettlementRepository,
         consortiumRepository: IConsortiumRepository,
         unitRepository: IUnitRepository,
         transactionRepository: ITransactionRepository,
       ) => {
-        return new PreviewSettlementUseCase(
+        return new FindSettlementByPeriodUseCase(
           settlementRepository,
           consortiumRepository,
           unitRepository,
           transactionRepository,
         );
       },
-      inject: [
-        SettlementRepository,
-        ConsortiumRepository,
-        UnitRepository,
-        TransactionRepository,
-      ],
+      inject: [SettlementRepository, ConsortiumRepository, UnitRepository, TransactionRepository],
     },
     {
       provide: CloseSettlementUseCase,
@@ -81,10 +76,7 @@ import { SettlementController } from './presentation/settlement.controller';
         reportGenerator: IReportGenerator,
         settlementRepository: ISettlementRepository,
       ) => {
-        return new GenerateSettlementReportUseCase(
-          reportGenerator,
-          settlementRepository,
-        );
+        return new GenerateSettlementReportUseCase(reportGenerator, settlementRepository);
       },
       inject: [REPORT_GENERATOR_TOKEN, SettlementRepository],
     },

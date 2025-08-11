@@ -8,12 +8,12 @@ import { Period, PeriodString } from 'src/shared/value-objects/period.vo';
 
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 import { TransactionSnapshot } from '../../domain/types/transaction-snapshot.type';
-import { PreviewSettlementInputDto } from '../dto/preview.dto';
+import { FindSettlementByPeriodInputDto } from '../dto/find-by-period.dto';
 import { SettlementOutputDto } from '../dto/settlement.dto';
 import { calculateTotals } from '../utils/calculate-total.util';
 import { prorateWithRounding } from '../utils/proration-rounding.util';
 
-export class PreviewSettlementUseCase {
+export class FindSettlementByPeriodUseCase {
   constructor(
     private readonly settlementRepository: ISettlementRepository,
     private readonly consortiumRepository: IConsortiumRepository,
@@ -21,7 +21,7 @@ export class PreviewSettlementUseCase {
     private readonly transactionRepository: ITransactionRepository,
   ) {}
 
-  async execute(inputDto: PreviewSettlementInputDto): Promise<SettlementOutputDto> {
+  async execute(inputDto: FindSettlementByPeriodInputDto): Promise<SettlementOutputDto> {
     const consortium = await this.consortiumRepository.findById(inputDto.consortiumId);
     if (!consortium) {
       throw new ConsortiumNotExistsException(inputDto.consortiumId);

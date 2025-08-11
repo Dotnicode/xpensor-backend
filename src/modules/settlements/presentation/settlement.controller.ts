@@ -14,17 +14,17 @@ import { ConsortiumNotExistsException } from '../../../shared/exceptions/consort
 import { ClosedSettlementException } from '../application/exceptions/closed-settlement.exception';
 import { CloseSettlementUseCase } from '../application/use-cases/close.usecase';
 import { ListSettlementUseCase } from '../application/use-cases/list.usecase';
-import { PreviewSettlementUseCase } from '../application/use-cases/preview.usecase';
+import { FindSettlementByPeriodUseCase } from '../application/use-cases/find-by-period.usecase';
 import { GenerateSettlementReportUseCase } from '../application/use-cases/report.usecase';
 import { CloseSettlementRequestDto } from './dto/close.request.dto';
-import { PreviewSettlementRequestDto } from './dto/preview.request.dto';
+import { FindSettlementByPeriodRequestDto } from './dto/find-by-period.request.dto';
 import { ReportSettlementRequestDto } from './dto/report.request.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('settlements')
 export class SettlementController {
   constructor(
-    private readonly previewSettlementUseCase: PreviewSettlementUseCase,
+    private readonly findByPeriodSettlementUseCase: FindSettlementByPeriodUseCase,
     private readonly closeSettlementUseCase: CloseSettlementUseCase,
     private readonly listSettlementUseCase: ListSettlementUseCase,
     private readonly generateSettlementReportUseCase: GenerateSettlementReportUseCase,
@@ -55,10 +55,10 @@ export class SettlementController {
     return this.listSettlementUseCase.execute(consortiumId);
   }
 
-  @Get('preview')
-  async previewPeriod(@Query() query: PreviewSettlementRequestDto) {
+  @Get('find-by-period')
+  async findByPeriod(@Query() query: FindSettlementByPeriodRequestDto) {
     try {
-      return await this.previewSettlementUseCase.execute({
+      return await this.findByPeriodSettlementUseCase.execute({
         consortiumId: query.consortiumId,
         period: query.period,
       });
