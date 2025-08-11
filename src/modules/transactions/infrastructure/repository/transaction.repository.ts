@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Period } from 'src/shared/types/period.type';
+import { PeriodString } from 'src/shared/value-objects/period.vo';
 import { DataSource } from 'typeorm';
 import { ITransactionRepository } from '../../domain/interfaces/repository.interface';
 import { ITransaction } from '../../domain/interfaces/transaction.interface';
@@ -14,23 +14,16 @@ export class TransactionRepository implements ITransactionRepository {
   ) {}
 
   async create(transaction: ITransaction): Promise<void> {
-    await this.dataSource
-      .getRepository(TransactionOrmSchema)
-      .save(this.mapper.toOrm(transaction));
+    await this.dataSource.getRepository(TransactionOrmSchema).save(this.mapper.toOrm(transaction));
   }
 
-  async listByPeriod(
-    period: Period,
-    consortiumId: string,
-  ): Promise<ITransaction[]> {
-    const transactions = await this.dataSource
-      .getRepository(TransactionOrmSchema)
-      .find({
-        where: {
-          period,
-          consortiumId,
-        },
-      });
+  async listByPeriod(period: PeriodString, consortiumId: string): Promise<ITransaction[]> {
+    const transactions = await this.dataSource.getRepository(TransactionOrmSchema).find({
+      where: {
+        period,
+        consortiumId,
+      },
+    });
 
     return this.mapper.toDomainArray(transactions);
   }

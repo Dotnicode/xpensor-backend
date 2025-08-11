@@ -1,7 +1,7 @@
 import { TransactionSource } from 'src/shared/enums/transaction-source.enum';
 import { TransactionType } from 'src/shared/enums/transaction-type.enum';
-import { Period } from 'src/shared/types/period.type';
 import { Money } from 'src/shared/value-objects/money.vo';
+import { PeriodString } from 'src/shared/value-objects/period.vo';
 
 export type TransactionSnapshot = {
   id: string;
@@ -11,5 +11,5 @@ export type TransactionSnapshot = {
   source: TransactionSource;
   description: string;
   amount: Money;
-  period: Period;
+  period: PeriodString;
 };

@@ -1,9 +1,8 @@
-import { TransactionOutputDto } from '../../application/dto/transaction.dto';
-import { Period } from '../types/period.type';
+import { PeriodString } from 'src/shared/value-objects/period.vo';
 import { ITransaction } from './transaction.interface';
 
 export interface ITransactionRepository {
   create(transaction: ITransaction): Promise<void>;
 
-  listByPeriod(period: Period, consortiumId: string): Promise<ITransaction[]>;
+  listByPeriod(period: PeriodString, consortiumId: string): Promise<ITransaction[]>;
 }

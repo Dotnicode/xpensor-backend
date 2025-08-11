@@ -1,6 +1,6 @@
 import { TransactionSource } from 'src/shared/enums/transaction-source.enum';
 import { TransactionType } from 'src/shared/enums/transaction-type.enum';
-import { Period } from 'src/shared/types/period.type';
+import { PeriodString } from 'src/shared/value-objects/period.vo';
 import { EntitySchema } from 'typeorm';
 
 export interface TransacionOrmEntity {
@@ -11,7 +11,7 @@ export interface TransacionOrmEntity {
   source: string;
   description: string;
   amount_cents: number;
-  period: Period;
+  period: PeriodString;
   createdAt: Date;
 }
 

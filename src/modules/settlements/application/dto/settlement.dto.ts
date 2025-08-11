@@ -1,4 +1,4 @@
-import { Period } from 'src/shared/types/period.type';
+import { PeriodString } from 'src/shared/value-objects/period.vo';
 import { TransactionSnapshotOutputDto } from './transaction-snapshot.dto';
 import { UnitProrationOutputDto } from './unit-proration.dto';
 
@@ -9,5 +9,5 @@ export class SettlementOutputDto {
   incomes: number;
   expenses: number;
   finalCash: number;
-  period: Period;
+  period: PeriodString;
 }

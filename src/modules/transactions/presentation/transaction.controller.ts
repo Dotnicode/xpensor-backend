@@ -25,9 +25,6 @@ export class TransactionController {
   async listTransactionsByPeriod(
     @Query() query: ListTransactionByPeriodRequestDto,
   ): Promise<TransactionOutputDto[]> {
-    return await this.listTransactionByPeriodUseCase.execute(
-      query.period,
-      query.consortiumId,
-    );
+    return await this.listTransactionByPeriodUseCase.execute(query.period, query.consortiumId);
   }
 }

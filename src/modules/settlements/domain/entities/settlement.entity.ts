@@ -1,5 +1,5 @@
-import { Period } from 'src/shared/types/period.type';
 import { Money } from 'src/shared/value-objects/money.vo';
+import { PeriodString } from 'src/shared/value-objects/period.vo';
 import { ISettlement } from '../interfaces/settlement.interface';
 import { TransactionSnapshot } from '../types/transaction-snapshot.type';
 import { UnitProration } from '../types/unit-proration.type';
@@ -14,7 +14,7 @@ export class Settlement implements ISettlement {
     public readonly incomes: Money,
     public readonly expenses: Money,
     public readonly finalCash: Money,
-    public readonly period: Period,
+    public readonly period: PeriodString,
     public readonly createdAt: Date,
   ) {}
 }

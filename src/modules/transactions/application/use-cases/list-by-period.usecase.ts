@@ -1,19 +1,13 @@
 import { BaseUseCase } from 'src/shared/interfaces/base-usecase.interface';
+import { PeriodString } from 'src/shared/value-objects/period.vo';
 import { ITransactionRepository } from '../../domain/interfaces/repository.interface';
 import { TransactionOutputDto } from '../dto/transaction.dto';
-import { Period } from 'src/shared/types/period.type';
 
 export class ListTransactionsByPeriodUseCase implements BaseUseCase {
   constructor(private transactionRepository: ITransactionRepository) {}
 
-  async execute(
-    period: Period,
-    consortiumId: string,
-  ): Promise<TransactionOutputDto[]> {
-    const transactions = await this.transactionRepository.listByPeriod(
-      period,
-      consortiumId,
-    );
+  async execute(period: PeriodString, consortiumId: string): Promise<TransactionOutputDto[]> {
+    const transactions = await this.transactionRepository.listByPeriod(period, consortiumId);
 
     return transactions.map((t) => ({
       id: t.id,

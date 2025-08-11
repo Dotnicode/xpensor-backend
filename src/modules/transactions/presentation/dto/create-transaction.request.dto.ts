@@ -1,17 +1,9 @@
-import {
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUUID,
-  Matches,
-} from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString, IsUUID, Matches } from 'class-validator';
 import { TransactionSource } from 'src/shared/enums/transaction-source.enum';
 import { TransactionType } from 'src/shared/enums/transaction-type.enum';
-import { Period } from 'src/shared/types/period.type';
-import { TransactionInputDto } from '../../application/dto/transaction.dto';
+import { PeriodString } from 'src/shared/value-objects/period.vo';
 
-export class CreateTransactionRequestDto implements TransactionInputDto {
+export class CreateTransactionRequestDto {
   @IsUUID()
   consortiumId: string;
   @IsUUID()
@@ -27,8 +19,7 @@ export class CreateTransactionRequestDto implements TransactionInputDto {
   description: string;
   @IsString()
   @Matches(/^(19\d{2}|20\d{2})-(0[1-9]|1[0-2])$/, {
-    message:
-      'Period must be in YYYY-MM format with valid year (1900-2099) and month (01-12)',
+    message: 'Period must be in YYYY-MM format with valid year (1900-2099) and month (01-12)',
   })
-  period: Period;
+  period: PeriodString;
 }

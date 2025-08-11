@@ -3,6 +3,7 @@ import { Settlement } from '../../domain/entities/settlement.entity';
 import { TransactionSnapshot } from '../../domain/types/transaction-snapshot.type';
 import { SettlementOrmEntity } from './settlement.schema';
 import { Money } from 'src/shared/value-objects/money.vo';
+import { PeriodString } from 'src/shared/value-objects/period.vo';
 
 export class SettlementRepositoryMapper extends RepositoryBaseMapper<
   Settlement,

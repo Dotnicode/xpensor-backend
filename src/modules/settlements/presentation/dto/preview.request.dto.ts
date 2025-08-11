@@ -1,13 +1,12 @@
 import { IsString, IsUUID } from 'class-validator';
-import { Period } from 'src/shared/types/period.type';
 import { IsPeriod } from 'src/shared/validators/period.validator';
-import { PreviewSettlementInputDto } from '../../application/dto/preview.dto';
+import { PeriodString } from 'src/shared/value-objects/period.vo';
 
-export class PreviewSettlementRequestDto implements PreviewSettlementInputDto {
+export class PreviewSettlementRequestDto {
   @IsUUID()
   consortiumId: string;
 
   @IsString()
   @IsPeriod()
-  period: Period;
+  period: PeriodString;
 }

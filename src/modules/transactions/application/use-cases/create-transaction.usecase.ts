@@ -2,13 +2,10 @@ import { randomUUID } from 'crypto';
 import { BaseUseCase } from 'src/shared/interfaces/base-usecase.interface';
 import { IConsortiumRepository } from 'src/shared/interfaces/consortium.interface';
 import { IUnitRepository } from 'src/shared/interfaces/unit.interface';
+import { Money } from 'src/shared/value-objects/money.vo';
 import { Transaction } from '../../domain/entities/transaction.entity';
 import { ITransactionRepository } from '../../domain/interfaces/repository.interface';
-import {
-  TransactionInputDto,
-  TransactionOutputDto,
-} from '../dto/transaction.dto';
-import { Money } from 'src/shared/value-objects/money.vo';
+import { TransactionInputDto, TransactionOutputDto } from '../dto/transaction.dto';
 
 export class CreateTransactionUseCase implements BaseUseCase {
   constructor(
@@ -18,9 +15,7 @@ export class CreateTransactionUseCase implements BaseUseCase {
   ) {}
 
   async execute(request: TransactionInputDto): Promise<TransactionOutputDto> {
-    const consortium = await this.consortiumRepository.findById(
-      request.consortiumId,
-    );
+    const consortium = await this.consortiumRepository.findById(request.consortiumId);
     if (!consortium) {
       throw new Error('Consortium not found');
     }

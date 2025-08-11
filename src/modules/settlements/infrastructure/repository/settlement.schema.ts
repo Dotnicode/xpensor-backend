@@ -1,7 +1,7 @@
 import { UnitProration } from 'src/shared/types/unit-proration.type';
+import { PeriodString } from 'src/shared/value-objects/period.vo';
 import { EntitySchema } from 'typeorm';
 import { TransactionSnapshot } from '../../domain/types/transaction-snapshot.type';
-import { Period } from 'src/shared/types/period.type';
 
 export interface SettlementOrmEntity {
   id: string;
@@ -12,7 +12,7 @@ export interface SettlementOrmEntity {
   incomes_cents: number;
   expenses_cents: number;
   finalCash_cents: number;
-  period: Period;
+  period: PeriodString;
   createdAt: Date;
 }
 
