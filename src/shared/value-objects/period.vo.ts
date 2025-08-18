@@ -36,6 +36,16 @@ export class Period {
   get month(): number {
     return this._month;
   }
+  get previousPeriod(): Period {
+    return this._month > 1
+      ? new Period(this._year, this._month - 1)
+      : new Period(this._year - 1, 12);
+  }
+  get nextPeriod(): Period {
+    return this._month < 12
+      ? new Period(this._year, this._month + 1)
+      : new Period(this._year + 1, 1);
+  }
 
   toString(): PeriodString {
     return `${this._year}-${String(this._month).padStart(2, '0')}` as PeriodString;
@@ -57,23 +67,16 @@ export class Period {
   isAfter(other: Period): boolean {
     return this.compare(other) === 1;
   }
-
-  // ---------- Navigation ----------
-  previousPeriod(): Period {
-    return this._month > 1
-      ? new Period(this._year, this._month - 1)
-      : new Period(this._year - 1, 12);
-  }
-  nextPeriod(): Period {
-    return this._month < 12
-      ? new Period(this._year, this._month + 1)
-      : new Period(this._year + 1, 1);
+  isPreviousPeriod(): boolean {
+    const currPeriod = Period.fromString(this.toString());
+    const now = Period.fromDate();
+    return currPeriod.isBefore(now);
   }
 
   // ---------- Utilities ----------
   toDateRange(): { start: Date; endExclusive: Date } {
     const start = new Date(this._year, this._month - 1, 1, 0, 0, 0, 0);
-    const endExclusive = this.nextPeriod().asMonthStartDate();
+    const endExclusive = this.nextPeriod.asMonthStartDate();
     return { start, endExclusive };
   }
   asMonthStartDate(): Date {

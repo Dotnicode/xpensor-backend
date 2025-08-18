@@ -30,11 +30,9 @@ export const SettlementOrmSchema = new EntitySchema<SettlementOrmEntity>({
     },
     transactions: {
       type: 'jsonb',
-      array: true,
     },
     proration: {
       type: 'jsonb',
-      nullable: false,
     },
     initialCash_cents: {
       type: 'int',
@@ -58,4 +56,12 @@ export const SettlementOrmSchema = new EntitySchema<SettlementOrmEntity>({
       createDate: true,
     },
   },
+  uniques: [{ name: 'UQ_settlement_consortium_period', columns: ['consortiumId', 'period'] }],
+  indices: [
+    {
+      name: 'IDX_settlement_consortium_period',
+      columns: ['consortiumId', 'period'],
+      unique: false,
+    },
+  ],
 });

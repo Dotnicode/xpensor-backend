@@ -2,7 +2,7 @@ import { TransactionType } from 'src/shared/enums/transaction-type.enum';
 import { Money } from 'src/shared/value-objects/money.vo';
 import { TransactionSnapshot } from '../../domain/types/transaction-snapshot.type';
 
-export function calculateTotals(transactions: TransactionSnapshot[]): {
+export function calculateTransactionTotalsByType(transactions: TransactionSnapshot[]): {
   totalExpenses: Money;
   totalIncomes: Money;
 } {

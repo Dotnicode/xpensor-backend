@@ -9,7 +9,6 @@ import { TransactionsModule } from '../transactions/transactions.module';
 import { IUnitRepository } from '../units/domain/interfaces/repository.interface';
 import { UnitRepository } from '../units/infrastructure/unit.repository';
 import { UnitModule } from '../units/unit.module';
-import { CloseSettlementUseCase } from './application/use-cases/close.usecase';
 import { ListSettlementUseCase } from './application/use-cases/list.usecase';
 import { FindSettlementByPeriodUseCase } from './application/use-cases/find-by-period.usecase';
 import { GenerateSettlementReportUseCase } from './application/use-cases/report.usecase';
@@ -19,6 +18,7 @@ import { PdfSettlementReportService } from './infrastructure/printer/pdf-settlem
 import { SettlementRepositoryMapper } from './infrastructure/repository/repository.mapper';
 import { SettlementRepository } from './infrastructure/repository/settlement.repository';
 import { SettlementController } from './presentation/settlement.controller';
+import { CloseSettlementPeriodUseCase } from './application/use-cases/close-period.usecase';
 
 @Module({
   imports: [PrinterModule, UnitModule, TransactionsModule],
@@ -49,19 +49,21 @@ import { SettlementController } from './presentation/settlement.controller';
       inject: [SettlementRepository, ConsortiumRepository, UnitRepository, TransactionRepository],
     },
     {
-      provide: CloseSettlementUseCase,
+      provide: CloseSettlementPeriodUseCase,
       useFactory: (
         settlementRepository: ISettlementRepository,
         consortiumRepository: IConsortiumRepository,
         unitRepository: IUnitRepository,
+        transactionRepository: ITransactionRepository,
       ) => {
-        return new CloseSettlementUseCase(
+        return new CloseSettlementPeriodUseCase(
           settlementRepository,
           consortiumRepository,
           unitRepository,
+          transactionRepository,
         );
       },
-      inject: [SettlementRepository, ConsortiumRepository, UnitRepository],
+      inject: [SettlementRepository, ConsortiumRepository, UnitRepository, TransactionRepository],
     },
     {
       provide: ListSettlementUseCase,

@@ -6,12 +6,12 @@ import { Money } from 'src/shared/value-objects/money.vo';
 import { Period } from 'src/shared/value-objects/period.vo';
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 import { TransactionSnapshot } from '../../domain/types/transaction-snapshot.type';
-import { FindSettlementByPeriodInputDto } from '../dto/find-by-period.dto';
-import { SettlementOutputDto } from '../dto/settlement.output.dto';
+import { CloseSettlementPeriodInputDto } from '../dto/close-period.dto';
+import { SettlementPeriodClosedException } from '../exceptions/period-closed.exception';
 import { calculateTransactionTotalsByType } from '../utils/calculate-transactions-totals.util';
 import { calculateUnitsProration } from '../utils/calculate-units-proration.util';
 
-export class FindSettlementByPeriodUseCase {
+export class CloseSettlementPeriodUseCase {
   constructor(
     private readonly settlementRepository: ISettlementRepository,
     private readonly consortiumRepository: IConsortiumRepository,
@@ -19,18 +19,26 @@ export class FindSettlementByPeriodUseCase {
     private readonly transactionRepository: ITransactionRepository,
   ) {}
 
-  async execute(inputDto: FindSettlementByPeriodInputDto): Promise<SettlementOutputDto> {
+  async execute(inputDto: CloseSettlementPeriodInputDto): Promise<void> {
+    const currentPeriod = Period.fromString(inputDto.period);
+    const isCurrentPeriod = currentPeriod.equals(Period.fromDate());
+
+    if (isCurrentPeriod) {
+      throw new Error('Cannot close current period');
+    }
+
     const consortium = await this.consortiumRepository.findById(inputDto.consortiumId);
     if (!consortium) {
       throw new ConsortiumNotExistsException(inputDto.consortiumId);
     }
 
-    const currentPeriod = Period.fromString(inputDto.period);
     const isSettlementExists = await this.settlementRepository.findByPeriod(
       inputDto.consortiumId,
       inputDto.period,
     );
-    const closed = !!isSettlementExists || currentPeriod.isPreviousPeriod();
+    if (isSettlementExists) {
+      throw new SettlementPeriodClosedException(inputDto.period);
+    }
 
     const transactions = await this.transactionRepository.listByPeriod(
       inputDto.period,
@@ -49,10 +57,10 @@ export class FindSettlementByPeriodUseCase {
       createdAt: t.createdAt,
     }));
 
-    const previousPeriod = currentPeriod.previousPeriod;
+    const previousPeriod = currentPeriod.previousPeriod.toString();
     const previousSettlement = await this.settlementRepository.findByPeriod(
       inputDto.consortiumId,
-      previousPeriod.toString(),
+      previousPeriod,
     );
 
     const initialCash = previousSettlement ? previousSettlement.finalCash : Money.zero();
@@ -63,21 +71,15 @@ export class FindSettlementByPeriodUseCase {
 
     const finalCash = initialCash.add(totalIncomes).subtract(totalExpenses);
 
-    return {
-      transactions: transactionsSnapshot.map((t) => ({
-        ...t,
-        amount: t.amount.amount,
-      })),
-      proration: unitsProration.map((u) => ({
-        ...u,
-        amount: u.amount.amount,
-      })),
-      initialCash: initialCash.amount,
-      expenses: totalExpenses.amount,
-      incomes: totalIncomes.amount,
-      finalCash: finalCash.amount,
-      period: inputDto.period,
-      closed,
-    };
+    await this.settlementRepository.createWithCheck(
+      inputDto.consortiumId,
+      transactionsSnapshot,
+      unitsProration,
+      initialCash.amount,
+      totalIncomes.amount,
+      totalExpenses.amount,
+      finalCash.amount,
+      inputDto.period,
+    );
   }
 }

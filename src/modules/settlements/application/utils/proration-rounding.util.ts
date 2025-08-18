@@ -26,9 +26,9 @@ export function prorateWithRounding(
 
   if (percentageDiff !== 0) {
     if (percentageDiff > 0 && percentageDiff <= tolerance) {
-      console.warn(
-        `Normalizing percentages: ${totalPercentage.toFixed(6)}% → 100% (diff: ${percentageDiff.toFixed(6)}%, tolerance: ${tolerance.toFixed(2)}%)`,
-      );
+      // console.warn(
+      //   `Normalizing percentages: ${totalPercentage.toFixed(6)}% → 100% (diff: ${percentageDiff.toFixed(6)}%, tolerance: ${tolerance.toFixed(2)}%)`,
+      // );
       normalizedUnits = units.map((u) => ({
         ...u,
         percentage: (u.percentage / totalPercentage) * 100,

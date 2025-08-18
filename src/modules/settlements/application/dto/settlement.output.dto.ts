@@ -1,6 +1,6 @@
 import { PeriodString } from 'src/shared/value-objects/period.vo';
-import { TransactionSnapshotOutputDto } from './transaction-snapshot.dto';
-import { UnitProrationOutputDto } from './unit-proration.dto';
+import { TransactionSnapshotOutputDto } from './transaction-snapshot.output.dto';
+import { UnitProrationOutputDto } from './unit-proration.output.dto';
 
 export class SettlementOutputDto {
   transactions: TransactionSnapshotOutputDto[];

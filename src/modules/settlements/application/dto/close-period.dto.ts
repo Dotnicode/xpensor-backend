@@ -1,6 +1,6 @@
 import { PeriodString } from 'src/shared/value-objects/period.vo';
 
-export class CloseSettlementInputDto {
+export class CloseSettlementPeriodInputDto {
   consortiumId: string;
   period: PeriodString;
 }

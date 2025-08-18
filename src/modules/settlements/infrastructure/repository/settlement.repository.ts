@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { UnitProration } from 'src/shared/types/unit-proration.type';
 import { PeriodString } from 'src/shared/value-objects/period.vo';
-import { DataSource } from 'typeorm';
+import { DataSource, QueryFailedError } from 'typeorm';
 import { Settlement } from '../../domain/entities/settlement.entity';
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 import { TransactionSnapshot } from '../../domain/types/transaction-snapshot.type';
 import { SettlementRepositoryMapper } from './repository.mapper';
-import { SettlementOrmSchema } from './settlement.schema';
+import { SettlementOrmEntity, SettlementOrmSchema } from './settlement.schema';
+import { SettlementPeriodClosedException } from '../../application/exceptions/period-closed.exception';
 
 @Injectable()
 export class SettlementRepository implements ISettlementRepository {
@@ -15,28 +16,44 @@ export class SettlementRepository implements ISettlementRepository {
     private readonly mapper: SettlementRepositoryMapper,
   ) {}
 
-  async create(
+  async createWithCheck(
     consortiumId: string,
     transactions: TransactionSnapshot[],
     proration: UnitProration[],
-    initialCash: number,
-    incomes: number,
-    expenses: number,
-    finalCash: number,
+    initialCash_cents: number,
+    incomes_cents: number,
+    expenses_cents: number,
+    finalCash_cents: number,
     period: PeriodString,
   ): Promise<Settlement> {
-    const settlement = await this.dataSource.getRepository(SettlementOrmSchema).save({
-      consortiumId,
-      transactions,
-      proration,
-      initialCash,
-      incomes,
-      expenses,
-      finalCash,
-      period,
-    });
+    return this.dataSource.transaction(async (manager) => {
+      const repo = manager.getRepository(SettlementOrmSchema);
 
-    return this.mapper.toDomain(settlement);
+      const res = await repo
+        .createQueryBuilder()
+        .insert()
+        .values({
+          consortiumId,
+          transactions,
+          proration,
+          initialCash_cents,
+          incomes_cents,
+          expenses_cents,
+          finalCash_cents,
+          period,
+        })
+        .orIgnore()
+        .returning('*')
+        .execute();
+
+      const insertedRows = res.raw as SettlementOrmEntity[];
+
+      if (!Array.isArray(insertedRows) || insertedRows.length === 0) {
+        throw new SettlementPeriodClosedException(period);
+      }
+
+      return this.mapper.toDomain(insertedRows[0]);
+    });
   }
 
   async listByConsortiumId(consortiumId: string): Promise<Settlement[]> {

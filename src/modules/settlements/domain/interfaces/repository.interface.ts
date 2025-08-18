@@ -4,14 +4,14 @@ import { Settlement } from '../entities/settlement.entity';
 import { TransactionSnapshot } from '../types/transaction-snapshot.type';
 
 export interface ISettlementRepository {
-  create(
+  createWithCheck(
     consortiumId: string,
     transactions: TransactionSnapshot[],
     proration: UnitProration[],
-    initialCash: number,
-    incomes: number,
-    expenses: number,
-    finalCash: number,
+    initialCash_cents: number,
+    incomes_cents: number,
+    expenses_cents: number,
+    finalCash_cents: number,
     period: PeriodString,
   ): Promise<Settlement>;
 
