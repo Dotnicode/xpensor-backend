@@ -9,7 +9,7 @@ import { TransactionsModule } from '../transactions/transactions.module';
 import { IUnitRepository } from '../units/domain/interfaces/repository.interface';
 import { UnitRepository } from '../units/infrastructure/unit.repository';
 import { UnitModule } from '../units/unit.module';
-import { ListSettlementUseCase } from './application/use-cases/list.usecase';
+import { ListSettlementByConsortiumIdUseCase } from './application/use-cases/list.usecase';
 import { PreviewCurrentPeriodPeriodUseCase } from './application/use-cases/preview-current-period.usecase';
 import { GenerateSettlementReportUseCase } from './application/use-cases/report.usecase';
 import type { IReportGenerator } from './domain/interfaces/report-generator.interface';
@@ -19,6 +19,7 @@ import { SettlementRepositoryMapper } from './infrastructure/repository/reposito
 import { SettlementRepository } from './infrastructure/repository/settlement.repository';
 import { SettlementController } from './presentation/settlement.controller';
 import { CloseSettlementPeriodUseCase } from './application/use-cases/close-period.usecase';
+import { FindSettlementByPeriodUseCase } from './application/use-cases/find-by-period.use';
 
 @Module({
   imports: [PrinterModule, UnitModule, TransactionsModule],
@@ -66,9 +67,9 @@ import { CloseSettlementPeriodUseCase } from './application/use-cases/close-peri
       inject: [SettlementRepository, ConsortiumRepository, UnitRepository, TransactionRepository],
     },
     {
-      provide: ListSettlementUseCase,
+      provide: ListSettlementByConsortiumIdUseCase,
       useFactory: (settlementRepository: ISettlementRepository) => {
-        return new ListSettlementUseCase(settlementRepository);
+        return new ListSettlementByConsortiumIdUseCase(settlementRepository);
       },
       inject: [SettlementRepository],
     },
@@ -82,6 +83,13 @@ import { CloseSettlementPeriodUseCase } from './application/use-cases/close-peri
       },
       inject: [REPORT_GENERATOR_TOKEN, SettlementRepository],
     },
+    {
+      provide: FindSettlementByPeriodUseCase,
+      useFactory: (settlementRepository: ISettlementRepository) => {
+        return new FindSettlementByPeriodUseCase(settlementRepository);
+      },
+      inject: [SettlementRepository],
+    }
   ],
   exports: [],
 })

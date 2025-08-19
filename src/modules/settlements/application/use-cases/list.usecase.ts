@@ -1,6 +1,6 @@
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 
-export class ListSettlementUseCase {
+export class ListSettlementByConsortiumIdUseCase {
   constructor(private readonly settlementRepository: ISettlementRepository) {}
 
   async execute(consortiumId: string) {
