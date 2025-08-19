@@ -6,10 +6,9 @@ import { Money } from 'src/shared/value-objects/money.vo';
 import { Period, PeriodString } from 'src/shared/value-objects/period.vo';
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 import { TransactionSnapshot } from '../../domain/types/transaction-snapshot.type';
+import { PreparedSettlementData } from '../types/prepared-settlement-data.type';
 import { calculateTransactionTotalsByType } from '../utils/calculate-transactions-totals.util';
 import { calculateUnitsProration } from '../utils/calculate-units-proration.util';
-import { PreparedSettlementData } from '../types/prepared-settlement-data.type';
-import { SettlementPeriodClosedException } from '../exceptions/period-closed.exception';
 
 export class PrepareSettlementService {
   constructor(
@@ -19,13 +18,9 @@ export class PrepareSettlementService {
     private readonly transactionRepository: ITransactionRepository,
   ) {}
 
-  async prepare(
-    consortiumId: string,
-    period: PeriodString,
-    preview: boolean,
-  ): Promise<PreparedSettlementData> {
+  async prepare(consortiumId: string, period: PeriodString): Promise<PreparedSettlementData> {
     const currentPeriod = Period.fromString(period);
-    
+
     const consortium = await this.consortiumRepository.findById(consortiumId);
     if (!consortium) {
       throw new ConsortiumNotExistsException(consortiumId);
@@ -35,10 +30,6 @@ export class PrepareSettlementService {
       consortiumId,
       period,
     ));
-
-    if (!preview && isSettlementExists) {
-      throw new SettlementPeriodClosedException(period);
-    }
 
     const transactions = await this.transactionRepository.listByPeriod(period, consortiumId);
 
@@ -68,7 +59,7 @@ export class PrepareSettlementService {
 
     const finalCash = initialCash.add(totalIncomes).subtract(totalExpenses);
 
-    console.debug(`Settlement preparation for ${consortiumId}/${period}, preview=${preview}, exists=${isSettlementExists}`);
+    console.debug(`Settlement preparation for ${consortiumId}/${period}`);
 
     return {
       currentPeriod,

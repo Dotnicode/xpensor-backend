@@ -10,7 +10,7 @@ import { IUnitRepository } from '../units/domain/interfaces/repository.interface
 import { UnitRepository } from '../units/infrastructure/unit.repository';
 import { UnitModule } from '../units/unit.module';
 import { ListSettlementUseCase } from './application/use-cases/list.usecase';
-import { FindSettlementByPeriodUseCase } from './application/use-cases/find-by-period.usecase';
+import { PreviewCurrentPeriodPeriodUseCase } from './application/use-cases/preview-current-period.usecase';
 import { GenerateSettlementReportUseCase } from './application/use-cases/report.usecase';
 import type { IReportGenerator } from './domain/interfaces/report-generator.interface';
 import { ISettlementRepository } from './domain/interfaces/repository.interface';
@@ -32,14 +32,14 @@ import { CloseSettlementPeriodUseCase } from './application/use-cases/close-peri
       useClass: PdfSettlementReportService,
     },
     {
-      provide: FindSettlementByPeriodUseCase,
+      provide: PreviewCurrentPeriodPeriodUseCase,
       useFactory: (
         settlementRepository: ISettlementRepository,
         consortiumRepository: IConsortiumRepository,
         unitRepository: IUnitRepository,
         transactionRepository: ITransactionRepository,
       ) => {
-        return new FindSettlementByPeriodUseCase(
+        return new PreviewCurrentPeriodPeriodUseCase(
           settlementRepository,
           consortiumRepository,
           unitRepository,

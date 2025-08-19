@@ -24,6 +24,15 @@ export class CloseSettlementPeriodUseCase {
       throw new CurrentPeriodCloseNotAllowedException();
     }
 
+    const existingSettlement = await this.settlementRepository.findByPeriod(
+      inputDto.consortiumId,
+      inputDto.period,
+    );
+
+    if (existingSettlement) {
+      throw new SettlementPeriodClosedException(inputDto.period);
+    }
+
     const service = new PrepareSettlementService(
       this.settlementRepository,
       this.consortiumRepository,
@@ -31,7 +40,7 @@ export class CloseSettlementPeriodUseCase {
       this.transactionRepository,
     );
 
-    const prepared = await service.prepare(inputDto.consortiumId, inputDto.period, false);
+    const prepared = await service.prepare(inputDto.consortiumId, inputDto.period);
 
     await this.settlementRepository.createWithCheck(
       inputDto.consortiumId,

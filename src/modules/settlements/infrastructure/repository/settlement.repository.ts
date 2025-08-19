@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { UnitProration } from 'src/shared/types/unit-proration.type';
 import { PeriodString } from 'src/shared/value-objects/period.vo';
-import { DataSource, QueryFailedError } from 'typeorm';
+import { DataSource } from 'typeorm';
+import { SettlementPeriodClosedException } from '../../application/exceptions/period-closed.exception';
 import { Settlement } from '../../domain/entities/settlement.entity';
 import { ISettlementRepository } from '../../domain/interfaces/repository.interface';
 import { TransactionSnapshot } from '../../domain/types/transaction-snapshot.type';
 import { SettlementRepositoryMapper } from './repository.mapper';
 import { SettlementOrmEntity, SettlementOrmSchema } from './settlement.schema';
-import { SettlementPeriodClosedException } from '../../application/exceptions/period-closed.exception';
 
 @Injectable()
 export class SettlementRepository implements ISettlementRepository {
