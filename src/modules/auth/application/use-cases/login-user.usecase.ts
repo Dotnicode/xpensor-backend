@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserInputDto } from './dto/login-user.input.dto';
+import { JWT_CONFIG } from '../../infrastructure/jwt/jwt.config';
 
 export class LoginUserUseCase {
   constructor(
@@ -17,14 +18,11 @@ export class LoginUserUseCase {
 
   async execute(
     loginUserInputDto: LoginUserInputDto,
-  ): Promise<{ token: string }> {
+  ): Promise<{ token: string; expiresIn: string }> {
     const user = await this.userRepository.findByEmail(loginUserInputDto.email);
     if (!user) throw new BadRequestException('User not found');
 
-    const isPasswordValid = await bcrypt.compare(
-      loginUserInputDto.password,
-      user.password,
-    );
+    const isPasswordValid = await bcrypt.compare(loginUserInputDto.password, user.password);
     if (!isPasswordValid) throw new UnauthorizedException('Invalid password');
 
     try {
@@ -32,7 +30,10 @@ export class LoginUserUseCase {
         sub: user.id,
         email: user.email,
       });
-      return { token };
+
+      const expiresIn = JWT_CONFIG.expiresIn;
+
+      return { token, expiresIn };
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

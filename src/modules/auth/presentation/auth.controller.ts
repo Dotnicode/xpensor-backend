@@ -6,11 +6,10 @@ import {
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
-
-import { LoginUserUseCase } from '../application/use-cases/login-user.usecase';
-import { RegisterUserUseCase } from '../application/use-cases/register-user.usecase';
 import { LoginUserRequestDto } from './dto/login-user.request.dto';
 import { RegisterUserRequestDto } from './dto/register-user.request.dto';
+import { LoginUserUseCase } from '../application/use-cases/login-user.usecase';
+import { RegisterUserUseCase } from '../application/use-cases/register-user.usecase';
 
 @Controller('auth')
 export class AuthController {
@@ -35,14 +34,9 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginUserRequestDto: LoginUserRequestDto) {
     try {
-      const { token } =
-        await this.loginUserUseCase.execute(loginUserRequestDto);
-      return { token };
+      return await this.loginUserUseCase.execute(loginUserRequestDto);
     } catch (error: unknown) {
-      if (
-        error instanceof UnauthorizedException ||
-        error instanceof BadRequestException
-      ) {
+      if (error instanceof UnauthorizedException || error instanceof BadRequestException) {
         throw error;
       }
       throw new InternalServerErrorException(error);
